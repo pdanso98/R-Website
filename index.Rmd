@@ -1,5 +1,16 @@
 ---
 title: "My Website"
-site: distill::distill_website
 listing: posts
+output: 
+  html_document: 
+    theme:
+      bg: "#040720"
+      fg: "white"
+      primary: "#3a99f8"
+      secondary: "#0072B2"
+      success: "#009E73"
+      base_font:
+        google: "Prompt"
+      code_font:
+        google: "Source Code Pro"
 ---

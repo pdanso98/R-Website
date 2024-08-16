@@ -4,9 +4,23 @@ description: |
   My Website
 output_dir: "Output"
 navbar:
+  search: true
   left:
     - text: "Home"
       href: index.html
+    - text: "R Projects"
+      menu: 
+       - text: "Mapping With R"
+         href: SpatialAnalysis.html
 output: 
   html_document: 
-    theme: flatly
+    theme:
+      bg: "#040720"
+      fg: "white"
+      primary: "#3a99f8"
+      secondary: "#0072B2"
+      success: "#009E73"
+      base_font:
+        google: "Prompt"
+      code_font:
+        google: "Source Code Pro"

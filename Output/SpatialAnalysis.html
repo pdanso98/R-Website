@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Author: Patrick Danso" />
+
+
+<title>Simple Spatial Analysis With R</title>
+
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link href="site_libs/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-5.3.1/bootstrap.bundle.min.js"></script>
+<link href="site_libs/Prompt-0.4.9/font.css" rel="stylesheet" />
+<link href="site_libs/Source_Code_Pro-0.4.9/font.css" rel="stylesheet" />
+<script src="site_libs/bs3compat-0.7.0/transition.js"></script>
+<script src="site_libs/bs3compat-0.7.0/tabs.js"></script>
+<script src="site_libs/bs3compat-0.7.0/bs3compat.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    R Projects
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="SpatialAnalysis.html">Mapping With R</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Simple Spatial Analysis With R</h1>
+<h4 class="author">Author: Patrick Danso</h4>
+<h4 class="date">Date: 2024-08-10</h4>
+
+</div>
+
+
+<hr>
+<div id="mapping-census-data-with-r" class="section level3">
+<h3>Mapping Census Data with R</h3>
+<p>This is a tutorial on how to map spatial data with R. In this
+tutorial, census data will be obtained using two different methods and
+then mapped to show the housing density in Travis County - Texas,
+emphasizing Downtown Austin. This tutorial is in two parts. In part one,
+census data will be downloaded from the <a
+href="https://www.nhgis.org/">NHGIS website</a> and then mapped. The
+second part of this tutorial follows an easier method of census data
+extraction using the <a
+href="https://cran.r-project.org/web/packages/tidycensus/index.html"><code>tidycensus package</code></a>
+and how to map the obtained data. The Census Geography used in this
+tutorial is Block Groups.</p>
+<p><strong><em>Objectives</em></strong></p>
+<ul>
+<li>Download census data from NHGIS</li>
+<li>Prepare data for mapping</li>
+<li>Map census data using tmap</li>
+<li>Download census data using tidycensus</li>
+<li>Map census data using ggplot2</li>
+</ul>
+<p>This tutorial assumes that the learner is familiar with or has basic
+knowledge of Geographic Information Systems. Now let’s begin! :)</p>
+<hr>
+</div>
+<div id="part-one" class="section level3">
+<h3><em>PART ONE</em></h3>
+<hr>
+<div id="data-cleaning" class="section level4">
+<h4>Data Cleaning</h4>
+<p>The first step to mapping the census data obtained from the NHGIS
+website is to look at the dataset and then process it for mapping. This
+section aims to import the downloaded dataset into R and make them clean
+enough for mapping. The <code>dplyr</code> tool is required to help with
+easy data manipulation. This function forms part of the <a
+href="https://www.tidyverse.org/packages/"><code>tidyverse package</code></a>,
+thus, while it can be installed and opened individually, installing and
+opening the full <code>tidyverse</code> is ideal for this tutorial. The
+<a href="https://r-spatial.github.io/sf/"><code>sf package</code></a> is
+useful for handling spatial vector data and it will be useful in this
+tutorial. This tutorial assumes that all the required packages have
+already been installed in R. If any package has not been installed, use
+the <code>install.packages()</code> function to install it.</p>
+<pre class="r"><code>#Open the required libraries 
+
+library(tidyverse)
+library(sf)
+
+#Import the data and store it under a new name
+
+Data1990&lt;-read.csv(&quot;C:\\Users\\Patrick\\Downloads\\Housing Data\\nhgis0045_ds120_1990_blck_grp.csv&quot;)
+
+#Have a glance at the data
+
+head(Data1990)</code></pre>
+<pre><code>##         GISJOIN YEAR STUSAB ANRCA AIANHHA RES_ONLYA TRUSTA AIANCC RES_TRSTA
+## 1 G480001095011 1990     TX    NA      NA        NA     NA     NA        NA
+## 2 G480001095012 1990     TX    NA      NA        NA     NA     NA        NA
+## 3 G480001095013 1990     TX    NA      NA        NA     NA     NA        NA
+## 4 G480001095021 1990     TX    NA      NA        NA     NA     NA        NA
+## 5 G480001095022 1990     TX    NA      NA        NA     NA     NA        NA
+## 6 G480001095023 1990     TX    NA      NA        NA     NA     NA        NA
+##   BLOCKA BLCK_GRPA TRACTA CD101A C_CITYA CMSA   COUNTY COUNTYA CTY_SUBA
+## 1     NA         1   9501     NA      NA   99 Anderson       1       NA
+## 2     NA         2   9501     NA      NA   99 Anderson       1       NA
+## 3     NA         3   9501     NA      NA   99 Anderson       1       NA
+## 4     NA         1   9502     NA      NA   99 Anderson       1       NA
+## 5     NA         2   9502     NA      NA   99 Anderson       1       NA
+## 6     NA         3   9502     NA      NA   99 Anderson       1       NA
+##   COUSUBCC DIVISIONA MSA_CMSAA PLACEA PLACECC PLACEDC PMSAA REGIONA STATE
+## 1       NA         7      9999     NA      NA      NA  9999       3 Texas
+## 2       NA         7      9999     NA      NA      NA  9999       3 Texas
+## 3       NA         7      9999     NA      NA      NA  9999       3 Texas
+## 4       NA         7      9999     NA      NA      NA  9999       3 Texas
+## 5       NA         7      9999     NA      NA      NA  9999       3 Texas
+## 6       NA         7      9999     NA      NA      NA  9999       3 Texas
+##   STATEA URBRURALA URB_AREAA CD103A AREALAND AREAWAT ANPSADPI FUNCSTAT INTPTLAT
+## 1     48        NA        NA     NA   165167    4035     BG 1        S 31989858
+## 2     48        NA        NA     NA    15451      37     BG 2        S 32061100
+## 3     48        NA        NA     NA   231306     232     BG 3        S 31974332
+## 4     48        NA        NA     NA   288742    2468     BG 1        S 31969331
+## 5     48        NA        NA     NA   102001     243     BG 2        S 31874321
+## 6     48        NA        NA     NA   114305    1286     BG 3        S 31816593
+##    INTPTLNG PSADC ESA001
+## 1 -95493659    NA    504
+## 2 -95499077    NA    548
+## 3 -95618887    NA    493
+## 4 -95754825    NA    607
+## 5 -95817188    NA    227
+## 6 -95784733    NA    401</code></pre>
+<p>The data is a structured with few adjustments to make. From the
+table, the Total Number of Housing Units is assigned to column
+<em>ESA001</em>. The GISJOIN Column is a character variable which gives
+a unique id to each row and it is very useful for Spatial Joins. The
+<em>TRACTA</em> Column provides the census tract code for each each
+county and it is very useful with selecting places within each
+County.</p>
+<pre class="r"><code>#Now let&#39;s clean the data and filter out Travis from the COUNTY variable
+#Also, select the needed variables and then rename the Total Housing Units
+
+Data1990&lt;-Data1990|&gt;filter(COUNTY==&quot;Travis&quot;)|&gt;select(GISJOIN, COUNTY, TRACTA, ESA001)|&gt;rename(HousingUnits=ESA001)
+
+#Now import the shapefile
+
+Shape1990&lt;-read_sf(&quot;C:\\Users\\Patrick\\Downloads\\Shapefiles\\US_blck_grp_1990.shp&quot;)
+
+#Take a look at the shapefile
+
+head(Shape1990)</code></pre>
+<pre><code>## Simple feature collection with 6 features and 8 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -4985513 ymin: 3283276 xmax: -3806974 ymax: 3838300
+## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic
+## # A tibble: 6 × 9
+##   FIPSSTCO TRACT  GROUP STFID        GISJOIN       GISJOIN2 SHAPE_AREA SHAPE_LEN
+##   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;
+## 1 02013    990000 1     020139900001 G020013099001 0200130…     9.73e9 2054992. 
+## 2 02013    990000 2     020139900002 G020013099002 0200130…     1.19e9  966449. 
+## 3 02013    990000 3     020139900003 G020013099003 0200130…     6.60e9 1423147. 
+## 4 02013    990000 4     020139900004 G020013099004 0200130…     6.89e8  422220. 
+## 5 02013    990099 4     020139900994 G02001309900… 0200130…     2.48e2      71.9
+## 6 02016    961900 4     020169619004 G020016096194 0200160…     5.73e9 2433284. 
+## # ℹ 1 more variable: geometry &lt;MULTIPOLYGON [m]&gt;</code></pre>
+<pre class="r"><code>#Now join the dataset to the shapefile using GISJOIN
+
+Data1990&lt;-merge(Data1990, Shape1990, by=&quot;GISJOIN&quot;)
+
+#Take a glance
+
+head(Data1990)</code></pre>
+<pre><code>##           GISJOIN COUNTY TRACTA HousingUnits FIPSSTCO  TRACT GROUP        STFID
+## 1 G48045300001011 Travis    101          412    48453 000101     1 484530001011
+## 2 G48045300001012 Travis    101          370    48453 000101     2 484530001012
+## 3 G48045300001013 Travis    101          766    48453 000101     3 484530001013
+## 4 G48045300001014 Travis    101          172    48453 000101     4 484530001014
+## 5 G48045300001015 Travis    101          235    48453 000101     5 484530001015
+## 6 G48045300001021 Travis    102          710    48453 000102     1 484530001021
+##         GISJOIN2 SHAPE_AREA SHAPE_LEN                       geometry
+## 1 48045300001011   966215.4  5581.166 MULTIPOLYGON (((-168128.1 -...
+## 2 48045300001012   469290.9  3368.958 MULTIPOLYGON (((-168190.1 -...
+## 3 48045300001013   525051.4  4426.543 MULTIPOLYGON (((-168017.8 -...
+## 4 48045300001014   536481.6  3523.410 MULTIPOLYGON (((-167857.5 -...
+## 5 48045300001015   630604.9  3650.997 MULTIPOLYGON (((-168539.5 -...
+## 6 48045300001021  3091207.1  9995.464 MULTIPOLYGON (((-168997.9 -...</code></pre>
+</div>
+<div id="simple-spatial-calculations" class="section level4">
+<h4>Simple Spatial Calculations</h4>
+<p>The main objective of this tutorial is to map the Housing Density for
+the State of Texas Using 1990 Block Group Census Data. The first part of
+this tutorial is focused on the importation, cleaning, and mapping of
+census data from NHGIS. Now that we have the data in a nicely structured
+format, it is time to make simple spatial calculations with R. From the
+data, it can be seen that the simple feature type is
+<em>Multipolygon</em> (a set of polygons). Knowing this, we can easily
+calculate the total land area in each census block group and then
+calculate the residential or housing density for Travis County at the
+block group level.</p>
+<pre class="r"><code>#First, let&#39;s convert the data into sf object and then use the appropriate projection for the State of Texas
+
+Data1990&lt;-st_as_sf(Data1990)
+
+#Now find the best CRS for the dataset and then apply it to the dataset. The crsuggest library will help with this.
+library(crsuggest)
+
+suggest_crs(Data1990)</code></pre>
+<pre><code>## # A tibble: 10 × 6
+##    crs_code crs_name                        crs_type crs_gcs crs_units crs_proj4
+##    &lt;chr&gt;    &lt;chr&gt;                           &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    
+##  1 6588     NAD83(2011) / Texas South Cent… project…    6318 us-ft     +proj=lc…
+##  2 6587     NAD83(2011) / Texas South Cent… project…    6318 m         +proj=lc…
+##  3 3674     NAD83(NSRS2007) / Texas South … project…    4759 us-ft     +proj=lc…
+##  4 3673     NAD83(NSRS2007) / Texas South … project…    4759 m         +proj=lc…
+##  5 32140    NAD83 / Texas South Central     project…    4269 m         +proj=lc…
+##  6 32040    NAD27 / Texas South Central     project…    4267 us-ft     +proj=lc…
+##  7 2919     NAD83(HARN) / Texas South Cent… project…    4152 us-ft     +proj=lc…
+##  8 2847     NAD83(HARN) / Texas South Cent… project…    4152 m         +proj=lc…
+##  9 2278     NAD83 / Texas South Central (f… project…    4269 us-ft     +proj=lc…
+## 10 6580     NAD83(2011) / Texas Centric La… project…    6318 m         +proj=lc…</code></pre>
+<pre class="r"><code>#Project using the NAD83(2011) / Texas South Central
+
+Data1990&lt;-Data1990|&gt;st_transform(6587)
+
+#Now that the dataset has been converted to sf objects successfully and projected, lets calculate the area for each block group
+#Getting the area will help with calculating the housing density. The Units library will be useful to set the unit for our calculations.
+library(units)
+
+#Calculate the area and store it under a new column
+
+Data1990$AreaPerSqKm&lt;-round(set_units(st_area(Data1990$geometry), km^2), digits = 2)
+
+#Now lets calculate housing Density
+
+Data1990$HousingDensity&lt;-Data1990$HousingUnits/Data1990$AreaPerSqKm
+
+#Let&#39;s check if our calculations and projection worked as desired
+
+Data1990|&gt;select(HousingDensity, AreaPerSqKm)|&gt; head(5)</code></pre>
+<pre><code>## Simple feature collection with 5 features and 2 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 718794.5 ymin: 4274595 xmax: 720665.8 ymax: 4278177
+## Projected CRS: NAD83(2011) / Texas South Central
+##       HousingDensity AreaPerSqKm                       geometry
+## 1  424.7423 [1/km^2] 0.97 [km^2] MULTIPOLYGON (((720048.3 42...
+## 2  787.2340 [1/km^2] 0.47 [km^2] MULTIPOLYGON (((720023.4 42...
+## 3 1445.2830 [1/km^2] 0.53 [km^2] MULTIPOLYGON (((720242.5 42...
+## 4  318.5185 [1/km^2] 0.54 [km^2] MULTIPOLYGON (((720407.7 42...
+## 5  373.0159 [1/km^2] 0.63 [km^2] MULTIPOLYGON (((719648.6 42...</code></pre>
+<pre class="r"><code>#Hurray! It worked.</code></pre>
+</div>
+<div id="mapping-with-tmap" class="section level4">
+<h4>Mapping with Tmap</h4>
+<p>Now that we have the needed variables from our calculations, it is
+now time to visualize or map the census data. In this tutorial, we are
+going to map our data using the <a
+href="https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html"><code>tmap package</code></a>.
+The Classification method used here is <em>manual interval</em>. In
+<code>tmap</code>, the breaks can be passed through <em>breaks</em> in
+the polygon layer as a vector.</p>
+<pre class="r"><code>#Open tmap
+library(tmap)
+
+#Create the map and store it as an Object 
+#The classification method used is manual interval.
+
+Map1&lt;-tm_shape(Data1990)+
+  tm_polygons(col = &quot;HousingDensity&quot;, 
+              palette=&quot;Greens&quot;, title=&quot;Housing Density (SqKm)&quot;, 
+              breaks=c(0, 1000, 2000, 3000, 4000, 5000), 
+              labels=c(&quot;0 to 999&quot;, &quot;1000 to 1999&quot;,&quot;2000 to 2999&quot;, &quot;3000 to 3999&quot;, &quot;4000 to 5000&quot;))+
+  tm_layout(frame = FALSE, 
+            legend.outside = TRUE)
+
+#View Map
+Map1</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-6-1.svg" width="672" /></p>
+<p>Hurray! We have created our first map for this tutorial in a few easy
+steps. It is now time to locate Downtown Austin from Travis County and
+then and then create an inset map showing the housing density in
+Downtown Austin Neighborhood.</p>
+</div>
+<div id="creating-an-inset-map" class="section level4">
+<h4>Creating an Inset Map</h4>
+<p>To create the inset map, we have to first locate Downtown Austin
+Neighborhood from the dataset and then create a subset. A simple way to
+locate the city of Austin from our dataset is to use the Tract code.
+From our data, the tract code for each census geography is stored under
+<em>TRACTA</em> column. Now the question is; how can we find the tract
+code for Travis County?</p>
+<p>While a simple search will do the magic, the <a
+href="https://geomap.ffiec.gov/ffiecgeomap/">Census Geocoder Website</a>
+is very efficient. Note that, tract codes change with time and thus will
+strongly recommend to check the updated tract codes on the Geocoder
+website provided above. For the purpose of this tutorial, refer to the
+<a
+href="https://www2.census.gov/geo/maps/trt1990/st48_Texas/48453_Travis/90T48453_A01.pdf">Census
+Beureau Link Here</a> to view the census tracts for the year 1990.</p>
+<pre class="r"><code>#The census tract codes for Downtown Austin in 1990 are 7 and 11.
+#The neighborhood had two census tracts in 1990. Now lets create a subset from the dataset. 
+
+Downtown1990&lt;-Data1990[Data1990$TRACTA%in%c(&quot;7&quot;, &quot;11&quot;), ]
+
+#View the subset
+
+view(Downtown1990)
+
+#It worked! </code></pre>
+<div id="create-a-bounding-box" class="section level5">
+<h5>Create a Bounding Box</h5>
+<p>At this step, we are going to create a bounding box to mark the
+boundary of the neighborhood. We can do this by creating a simple
+feature list column from our subset and then add it to
+<em>Map1</em>.</p>
+<pre class="r"><code>#Create bounding box for the neighborhood
+
+BoundingBox&lt;-st_bbox(Downtown1990)|&gt;st_as_sfc()
+
+#Now add the bounding box to Map1 and Store it as Map2, also add a compass to the map
+
+Map2&lt;-Map1+tm_shape(BoundingBox)+tm_polygons(border.col = &quot;orangered&quot;, lwd=1.5, alpha = 0)+
+  tm_compass(type = &quot;8star&quot;, size = 3, position = c(&quot;right&quot;,&quot;top&quot;))
+
+#View Map
+Map2</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-8-1.svg" width="672" /></p>
+<p>Yay! We created our second map for this tutorial. We are making
+Progress!</p>
+<p>Finally let’s create the inset map to be added to the final map.</p>
+<pre class="r"><code>#Create a map from Downtown1990 dataset with similar breaks as that of Map1
+
+Map3&lt;-tm_shape(Downtown1990, bbox = BoundingBox)+
+  tm_polygons(col = &quot;HousingDensity&quot;, 
+              palette=&quot;Greens&quot;, 
+              breaks=c(0, 1000, 2000, 3000, 4000, 5000), 
+              labels=c(&quot;0 to 999&quot;, &quot;1000 to 1999&quot;,&quot;2000 to 2999&quot;, &quot;3000 to 3999&quot;, &quot;4000 to 5000&quot;))+
+  tm_layout(legend.show = FALSE, frame.lwd = 2, frame = &quot;orangered&quot;)
+
+#View the Map
+Map3</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-9-1.svg" width="672" /></p>
+<p>Now let’s add <em>Map3</em> as an inset map to <em>Map2</em> Here, we
+will convert the maps to Grid Graphic Object. The reason for doing this
+is to enable us draw the the plots and store it as a single plot. In
+this tutorial, we will convert the plots to <code>grob</code> using the
+<code>tm_grob</code> function since we are working with tmaps. After
+that, we will use functions from the <a
+href="https://www.rdocumentation.org/packages/cowplot/versions/1.1.3"><code>cowplot package</code></a>
+to draw the grobs (Graphic Objects).</p>
+<pre class="r"><code>#Open cowplot
+library(cowplot) 
+
+#Export plots to grobs
+#Note the aspect ratios generated for each grob. This will help with placements and adjustments.
+Map2Grob&lt;-tmap_grob(Map2)
+Map3Grob&lt;-tmap_grob(Map3)
+
+#Now draw the plots and store it as a single object using ggdraw 
+
+FinalMap&lt;-ggdraw()+
+  draw_grob(Map2Grob)+
+  draw_grob(Map3Grob, x=0.25, height = 0.4, y=0.1)
+
+#View the Map
+FinalMap</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-10-1.svg" width="672" /></p>
+<p>Hurray! We have created our final map for part one of this tutorial.
+We can now export the map and use it as needed. This marks the end of
+Part One of this tutorial. See you in Part Two! :)</p>
+<hr>
+<hr/>
+</div>
+</div>
+</div>
+<div id="part-two" class="section level3">
+<h3><em>PART TWO</em></h3>
+<hr>
+<p>It’s nice to see you again :) I am glad to see you make progress!</p>
+<p>In this part of the tutorial, We are going to create a similar map
+just like the one we made in part one. This means we are going to create
+a housing density map for Travis County-Texas with emphasis on Downtown
+Austin. However, this part differs from that of the previous with
+regards to data importation, year and mapping package.</p>
+<p>Here, we are going to download our census data from the United States
+Census Bureau using the <code>tidycensus package</code> and then map the
+census data using <code>ggplot2</code>. The aim of this part of the
+tutorial is learn alternatives to accessing census data and mapping
+them. R provides various alternatives to mapping spatial data and it is
+almost impossible to cover all in this tutorial. However, we will cover
+most of them in upcoming tutorials.</p>
+<div id="download-census-data" class="section level4">
+<h4>Download Census Data</h4>
+<p>The tidycensus package is designed to provide persons who are
+interested in working with census data easy access to pre-processed
+census data in R. Take a look at this <a
+href="https://walker-data.com/tidycensus/articles/basic-usage.html"><code>tidycensus package Link</code></a>
+to learn the package’s syntax. Before we proceed, we will need an API
+Key to access the data. <a
+href="https://api.census.gov/data/key_signup.html">Click Here</a> to
+request Census Data API Key.</p>
+<p>Now let’s download the required data using tidycensus. Here, we will
+be using decennial data for the year 2000. We will be using <em>summary
+file 1</em> from the 2000 decennial census since it contains demographic
+data.</p>
+<pre class="r"><code>#Lets take a look at the variables for the year 1990 and then Identify the the name of the variable needed for our project
+library(tidycensus)
+
+Variables&lt;-load_variables(year = 2000, &quot;sf1&quot;)
+
+#From the table we can see that the total housing unit variable is named &#39;H001001&#39;. We will be using this to download our data. 
+
+Data2000&lt;-get_decennial(geography = &quot;block group&quot;, variables = c(HousingUnits=&quot;H001001&quot;), year=2000, state = &quot;TX&quot;,
+                        county = &quot;Travis&quot;, key = &quot;73a534be4b8cd8aa9d67ff375d2a0a9546efdb26&quot;, 
+                        sumfile = &quot;sf1&quot;, geometry = TRUE)
+
+#Now let&#39;s structure our data in a nice way.
+
+Data2000&lt;-Data2000|&gt;pivot_wider(names_from = variable, values_from = value)</code></pre>
+<p>From the code above, we downloaded our data using tidycensus while
+setting <code>geometry</code> to <code>true</code> to enable us map our
+data. The data downloaded from the tidycensus package is pre-prepared
+and thus, there is little or nothing to do with regards to data cleaning
+for the purpose of this tutorial.</p>
+<p>Now let’s map our data using <code>ggplot 2</code>.</p>
+</div>
+<div id="mapping-with-ggplot2" class="section level4">
+<h4>Mapping with GGplot2</h4>
+<pre class="r"><code>#Calculate the area and store it under a new column
+
+Data2000$AreaPerSqKm&lt;-round(set_units(st_area(Data2000$geometry), km^2), digits = 2)
+
+#Now lets calculate housing Density
+
+Data2000$HousingDensity&lt;-Data2000$HousingUnits/Data2000$AreaPerSqKm
+
+#Now lets drop the units. This is to enable easy mapping with geom_sf
+
+Data2000$HousingDensity&lt;-drop_units(Data2000$HousingDensity)
+
+#Project using the same projection used in Part 1
+
+Data2000&lt;-Data2000|&gt;st_transform(6587)</code></pre>
+<p>Notice that we did not covert the data to sf features. That is
+because the data from the tidycensus package is pre-processed for
+mapping.</p>
+<pre class="r"><code>#Create a map for Housing Density in Travis County using ggplot2 and then store it as an object
+
+Gmap1&lt;-ggplot(data = Data2000)+
+  geom_sf(aes(fill=HousingDensity))+
+  scale_fill_distiller(palette = 4, direction = 1)+theme_map()
+
+Gmap1
+
+#Applying theme_map() from the cowplot package as a layer removes all the grids from the plot. 
+#Alternatively, you can remove the grids manually. This method is shown as follows; 
+
+Gmap1&lt;-ggplot(data = Data2000)+
+  geom_sf(aes(fill=HousingDensity))+
+  theme_minimal()+
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank())+
+  scale_fill_distiller(palette = &quot;Greens&quot;,
+                       breaks=c(1000, 2000, 3000, 4000, 5000),
+                      limits=c(0, 5200), direction = 1)+
+  labs(fill = &quot;Housing Density(SqKm)&quot;)
+
+Gmap1
+
+#Now lets add some elements to our map. We can do this by installing ggspatial
+library(ggspatial)
+
+Gmap1&lt;-Gmap1+annotation_north_arrow(location=&quot;tr&quot;, style = north_arrow_nautical())
+
+#View Map 
+Gmap1</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-13-1.svg" width="672" /></p>
+<p>Notice how we passed the breaks through geom_sf(). Now let’s create
+an inset map and then add it the map. <a
+href="https://cran.r-project.org/web/packages/ggspatial/index.html">Click
+This Link</a> to learn how <code>ggspatial</code> work.</p>
+</div>
+<div id="creating-an-inset-map-1" class="section level4">
+<h4>Creating an Inset Map</h4>
+<p><a
+href="https://www2.census.gov/plmap/pl_trt/st48_Texas/c48453_Travis/CT48453_A01.pdf">Click
+Here</a> to view the Census Tract Outline Map for Travis County for the
+year 2000.</p>
+<pre class="r"><code>#The census tract codes for Downtown Austin in 2000 are 7 and 11.
+#The neighborhood had two census tracts in 2000. Now lets create a subset from the dataset. 
+#Since the column is character(string), we will select using str_detect()
+
+Downtown2000&lt;-Data2000[str_detect(Data2000$NAME, &quot;Census Tract 7|Census Tract 11&quot;), ]
+
+#Now lets create a bounding box
+
+BoundingBox2&lt;-st_bbox(Downtown2000)|&gt;st_as_sfc()
+
+#Add the bounding box to the map 
+
+Gmap2&lt;-Gmap1+geom_sf(data = BoundingBox2, color=&quot;orangered&quot;, alpha=0, lwd=0.5)+
+  theme(legend.position = c(0.1, 0.15))
+        
+#View Map
+Gmap2</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-14-1.svg" width="672" /></p>
+<pre class="r"><code>#Map for Downtown Austin 
+
+Gmap3&lt;-ggplot(data = Downtown2000)+
+  geom_sf(aes(fill=HousingDensity))+
+  theme_minimal()+
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = &quot;none&quot;,
+        panel.border = element_rect(color = &quot;orangered&quot;, 
+                                    fill = NA, 
+                                    size = 0.7))+
+   scale_fill_distiller(palette = &quot;Greens&quot;,
+                        breaks=c(1000, 2000, 3000, 4000, 5000),
+                       limits=c(0, 5200), direction = 1)
+
+#View Map
+Gmap3</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-15-1.svg" width="672" /></p>
+<pre class="r"><code>#Now draw the two maps using cowplot.
+#We will first convert the plots to grobs using ggplotGrob since we are working with ggplot2
+
+GmapGrob1&lt;-ggplotGrob(Gmap2)
+GmapGrob2&lt;-ggplotGrob(Gmap3)
+
+FinalMap2&lt;-ggdraw()+
+  draw_grob(GmapGrob1)+
+  draw_grob(GmapGrob2, x=0.37, height = 0.4)
+
+#View Map
+FinalMap2</code></pre>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-16-1.svg" width="672" /></p>
+<p>Yay! We did it! We have achieved all the goals set for this tutorial.
+I hope you learned alot.</p>
+<hr>
+<p><strong>END OF TUTORIAL</strong></p>
+<hr/>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

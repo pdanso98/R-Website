@@ -1,0 +1,406 @@
+---
+title: "Simple Spatial Analysis With R"
+author: "Author: Patrick Danso"
+date: "Date: 2024-08-10"
+output: 
+  html_document: 
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: no
+      smooth: yes
+    code_folding: "show"
+    theme:
+      bg: "#040720"
+      fg: "white"
+      primary: "#3a99f8"
+      secondary: "#0072B2"
+      success: "#009E73"
+      base_font:
+        google: "Prompt"
+      code_font:
+        google: "Source Code Pro"
+
+---
+
+<hr>
+
+### Mapping Census Data with R
+
+This is a tutorial on how to map spatial data with R. In this tutorial, census data will be obtained using two different methods and then mapped to show the housing density in Travis County - Texas, emphasizing Downtown Austin. This tutorial is in two parts. In part one, census data will be downloaded from the [NHGIS website](https://www.nhgis.org/) and then mapped. The second part of this tutorial follows an easier method of census data extraction using the [`tidycensus package`](https://cran.r-project.org/web/packages/tidycensus/index.html) and how to map the obtained data. The Census Geography used in this tutorial is Block Groups.
+
+***Objectives***
+
+* Download census data from NHGIS
+* Prepare data for mapping
+* Map census data using tmap
+* Download census data using tidycensus
+* Map census data using ggplot2 
+
+This tutorial assumes that the learner is familiar with or has basic knowledge of Geographic Information Systems. Now let's begin! :)
+
+<hr>
+
+### *PART ONE*
+
+<hr>
+
+#### Data Cleaning
+
+The first step to mapping the census data obtained from the NHGIS website is to look at the dataset and then process it for mapping. This section aims to import the downloaded dataset into R and make them clean enough for mapping. The `dplyr` tool is required to help with easy data manipulation. This function forms part of the [`tidyverse package`](https://www.tidyverse.org/packages/), thus, while it can be installed and opened individually, installing and opening the full `tidyverse` is ideal for this tutorial. The [`sf package`](https://r-spatial.github.io/sf/) is useful for handling spatial vector data and it will be useful in this tutorial. This tutorial assumes that all the required packages have already been installed in R. If any package has not been installed, use the `install.packages()` function to install it.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#Open the required libraries 
+
+library(tidyverse)
+library(sf)
+
+#Import the data and store it under a new name
+
+Data1990<-read.csv("C:\\Users\\Patrick\\Downloads\\Housing Data\\nhgis0045_ds120_1990_blck_grp.csv")
+
+#Have a glance at the data
+
+head(Data1990)
+```
+
+The data is a structured with few adjustments to make. From the table, the Total Number of Housing Units is assigned to column *ESA001*. The GISJOIN Column is a character variable which gives a unique id to each row and it is very useful for Spatial Joins. The *TRACTA* Column provides the census tract code for each each county and it is very useful with selecting places within each County.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#Now let's clean the data and filter out Travis from the COUNTY variable
+#Also, select the needed variables and then rename the Total Housing Units
+
+Data1990<-Data1990|>filter(COUNTY=="Travis")|>select(GISJOIN, COUNTY, TRACTA, ESA001)|>rename(HousingUnits=ESA001)
+
+#Now import the shapefile
+
+Shape1990<-read_sf("C:\\Users\\Patrick\\Downloads\\Shapefiles\\US_blck_grp_1990.shp")
+
+#Take a look at the shapefile
+
+head(Shape1990)
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#Now join the dataset to the shapefile using GISJOIN
+
+Data1990<-merge(Data1990, Shape1990, by="GISJOIN")
+
+#Take a glance
+
+head(Data1990)
+
+```
+
+#### Simple Spatial Calculations
+
+The main objective of this tutorial is to map the Housing Density for the State of Texas Using 1990 Block Group Census Data. The first part of this tutorial is focused on the importation, cleaning, and mapping of census data from NHGIS. Now that we have the data in a nicely structured format, it is time to make simple spatial calculations with R. From the data, it can be seen that the simple feature type is *Multipolygon* (a set of polygons). Knowing this, we can easily calculate the total land area in each census block group and then calculate the residential or housing density for Travis County at the block group level.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#First, let's convert the data into sf object and then use the appropriate projection for the State of Texas
+
+Data1990<-st_as_sf(Data1990)
+
+#Now find the best CRS for the dataset and then apply it to the dataset. The crsuggest library will help with this.
+library(crsuggest)
+
+suggest_crs(Data1990)
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#Project using the NAD83(2011) / Texas South Central
+
+Data1990<-Data1990|>st_transform(6587)
+
+#Now that the dataset has been converted to sf objects successfully and projected, lets calculate the area for each block group
+#Getting the area will help with calculating the housing density. The Units library will be useful to set the unit for our calculations.
+library(units)
+
+#Calculate the area and store it under a new column
+
+Data1990$AreaPerSqKm<-round(set_units(st_area(Data1990$geometry), km^2), digits = 2)
+
+#Now lets calculate housing Density
+
+Data1990$HousingDensity<-Data1990$HousingUnits/Data1990$AreaPerSqKm
+
+#Let's check if our calculations and projection worked as desired
+
+Data1990|>select(HousingDensity, AreaPerSqKm)|> head(5)
+
+#Hurray! It worked.
+
+```
+
+#### Mapping with Tmap
+
+Now that we have the needed variables from our calculations, it is now time to visualize or map the census data. In this tutorial, we are going to map our data using the [`tmap package`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html). The Classification method used here is *manual interval*. In `tmap`, the breaks can be passed through *breaks* in the polygon layer as a vector.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.format='svglite'}
+#Open tmap
+library(tmap)
+
+#Create the map and store it as an Object 
+#The classification method used is manual interval.
+
+Map1<-tm_shape(Data1990)+
+  tm_polygons(col = "HousingDensity", 
+              palette="Greens", title="Housing Density (SqKm)", 
+              breaks=c(0, 1000, 2000, 3000, 4000, 5000), 
+              labels=c("0 to 999", "1000 to 1999","2000 to 2999", "3000 to 3999", "4000 to 5000"))+
+  tm_layout(frame = FALSE, 
+            legend.outside = TRUE)
+
+#View Map
+Map1
+```
+
+Hurray! We have created our first map for this tutorial in a few easy steps. It is now time to locate Downtown Austin from Travis County and then and then create an inset map showing the housing density in Downtown Austin Neighborhood.
+
+#### Creating an Inset Map
+
+To create the inset map, we have to first locate Downtown Austin Neighborhood from the dataset and then create a subset. A simple way to locate the city of Austin from our dataset is to use the Tract code. From our data, the tract code for each census geography is stored under *TRACTA* column. Now the question is; how can we find the tract code for Travis County?
+
+While a simple search will do the magic, the [Census Geocoder Website](https://geomap.ffiec.gov/ffiecgeomap/) is very efficient. Note that, tract codes change with time and thus will strongly recommend to check the updated tract codes on the Geocoder website provided above. For the purpose of this tutorial, refer to the [Census Beureau Link Here](https://www2.census.gov/geo/maps/trt1990/st48_Texas/48453_Travis/90T48453_A01.pdf) to view the census tracts for the year 1990.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#The census tract codes for Downtown Austin in 1990 are 7 and 11.
+#The neighborhood had two census tracts in 1990. Now lets create a subset from the dataset. 
+
+Downtown1990<-Data1990[Data1990$TRACTA%in%c("7", "11"), ]
+
+#View the subset
+
+view(Downtown1990)
+
+#It worked! 
+```
+
+##### Create a Bounding Box
+
+At this step, we are going to create a bounding box to mark the boundary of the neighborhood. We can do this by creating a simple feature list column from our subset and then add it to *Map1*.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.format='svglite'}
+#Create bounding box for the neighborhood
+
+BoundingBox<-st_bbox(Downtown1990)|>st_as_sfc()
+
+#Now add the bounding box to Map1 and Store it as Map2, also add a compass to the map
+
+Map2<-Map1+tm_shape(BoundingBox)+tm_polygons(border.col = "orangered", lwd=1.5, alpha = 0)+
+  tm_compass(type = "8star", size = 3, position = c("right","top"))
+
+#View Map
+Map2
+```
+
+Yay! We created our second map for this tutorial. We are making Progress!
+
+Finally let's create the inset map to be added to the final map.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.format='svglite'}
+#Create a map from Downtown1990 dataset with similar breaks as that of Map1
+
+Map3<-tm_shape(Downtown1990, bbox = BoundingBox)+
+  tm_polygons(col = "HousingDensity", 
+              palette="Greens", 
+              breaks=c(0, 1000, 2000, 3000, 4000, 5000), 
+              labels=c("0 to 999", "1000 to 1999","2000 to 2999", "3000 to 3999", "4000 to 5000"))+
+  tm_layout(legend.show = FALSE, frame.lwd = 2, frame = "orangered")
+
+#View the Map
+Map3
+```
+
+Now let's add *Map3* as an inset map to *Map2* Here, we will convert the maps to Grid Graphic Object. The reason for doing this is to enable us draw the the plots and store it as a single plot. In this tutorial, we will convert the plots to `grob` using the `tm_grob` function since we are working with tmaps. After that, we will use functions from the [`cowplot package`](https://www.rdocumentation.org/packages/cowplot/versions/1.1.3) to draw the grobs (Graphic Objects).
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.keep='last', fig.format='svglite'}
+#Open cowplot
+library(cowplot) 
+
+#Export plots to grobs
+#Note the aspect ratios generated for each grob. This will help with placements and adjustments.
+Map2Grob<-tmap_grob(Map2)
+Map3Grob<-tmap_grob(Map3)
+
+#Now draw the plots and store it as a single object using ggdraw 
+
+FinalMap<-ggdraw()+
+  draw_grob(Map2Grob)+
+  draw_grob(Map3Grob, x=0.25, height = 0.4, y=0.1)
+
+#View the Map
+FinalMap
+```
+
+Hurray! We have created our final map for part one of this tutorial. We can now export the map and use it as needed. This marks the end of Part One of this tutorial. See you in Part Two! :)
+
+<hr>
+
+<hr/>
+
+### *PART TWO*
+
+<hr>
+
+It's nice to see you again :) I am glad to see you make progress!
+
+In this part of the tutorial, We are going to create a similar map just like the one we made in part one. This means we are going to create a housing density map for Travis County-Texas with emphasis on Downtown Austin. However, this part differs from that of the previous with regards to data importation, year and mapping package.
+
+Here, we are going to download our census data from the United States Census Bureau using the `tidycensus package` and then map the census data using `ggplot2`. The aim of this part of the tutorial is learn alternatives to accessing census data and mapping them. R provides various alternatives to mapping spatial data and it is almost impossible to cover all in this tutorial. However, we will cover most of them in upcoming tutorials.
+
+#### Download Census Data
+
+The tidycensus package is designed to provide persons who are interested in working with census data easy access to pre-processed census data in R. Take a look at this [`tidycensus package Link`](https://walker-data.com/tidycensus/articles/basic-usage.html) to learn the package's syntax. Before we proceed, we will need an API Key to access the data. [Click Here](https://api.census.gov/data/key_signup.html) to request Census Data API Key.
+
+Now let's download the required data using tidycensus. Here, we will be using decennial data for the year 2000. We will be using *summary file 1* from the 2000 decennial census since it contains demographic data.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, results='hide'}
+#Lets take a look at the variables for the year 1990 and then Identify the the name of the variable needed for our project
+library(tidycensus)
+
+Variables<-load_variables(year = 2000, "sf1")
+
+#From the table we can see that the total housing unit variable is named 'H001001'. We will be using this to download our data. 
+
+Data2000<-get_decennial(geography = "block group", variables = c(HousingUnits="H001001"), year=2000, state = "TX",
+                        county = "Travis", key = "73a534be4b8cd8aa9d67ff375d2a0a9546efdb26", 
+                        sumfile = "sf1", geometry = TRUE)
+
+#Now let's structure our data in a nice way.
+
+Data2000<-Data2000|>pivot_wider(names_from = variable, values_from = value)
+```
+
+From the code above, we downloaded our data using tidycensus while setting `geometry` to `true` to enable us map our data. The data downloaded from the tidycensus package is pre-prepared and thus, there is little or nothing to do with regards to data cleaning for the purpose of this tutorial.
+
+Now let's map our data using `ggplot 2`.
+
+#### Mapping with GGplot2
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+#Calculate the area and store it under a new column
+
+Data2000$AreaPerSqKm<-round(set_units(st_area(Data2000$geometry), km^2), digits = 2)
+
+#Now lets calculate housing Density
+
+Data2000$HousingDensity<-Data2000$HousingUnits/Data2000$AreaPerSqKm
+
+#Now lets drop the units. This is to enable easy mapping with geom_sf
+
+Data2000$HousingDensity<-drop_units(Data2000$HousingDensity)
+
+#Project using the same projection used in Part 1
+
+Data2000<-Data2000|>st_transform(6587)
+
+```
+
+Notice that we did not covert the data to sf features. That is because the data from the tidycensus package is pre-processed for mapping.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.keep='last', fig.format='svglite'}
+#Create a map for Housing Density in Travis County using ggplot2 and then store it as an object
+
+Gmap1<-ggplot(data = Data2000)+
+  geom_sf(aes(fill=HousingDensity))+
+  scale_fill_distiller(palette = 4, direction = 1)+theme_map()
+
+Gmap1
+
+#Applying theme_map() from the cowplot package as a layer removes all the grids from the plot. 
+#Alternatively, you can remove the grids manually. This method is shown as follows; 
+
+Gmap1<-ggplot(data = Data2000)+
+  geom_sf(aes(fill=HousingDensity))+
+  theme_minimal()+
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank())+
+  scale_fill_distiller(palette = "Greens",
+                       breaks=c(1000, 2000, 3000, 4000, 5000),
+                      limits=c(0, 5200), direction = 1)+
+  labs(fill = "Housing Density(SqKm)")
+
+Gmap1
+
+#Now lets add some elements to our map. We can do this by installing ggspatial
+library(ggspatial)
+
+Gmap1<-Gmap1+annotation_north_arrow(location="tr", style = north_arrow_nautical())
+
+#View Map 
+Gmap1
+```
+
+Notice how we passed the breaks through geom_sf(). Now let's create an inset map and then add it the map. [Click This Link](https://cran.r-project.org/web/packages/ggspatial/index.html) to learn how `ggspatial` work.
+
+#### Creating an Inset Map
+
+[Click Here](https://www2.census.gov/plmap/pl_trt/st48_Texas/c48453_Travis/CT48453_A01.pdf) to view the Census Tract Outline Map for Travis County for the year 2000.
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.format='svglite'}
+#The census tract codes for Downtown Austin in 2000 are 7 and 11.
+#The neighborhood had two census tracts in 2000. Now lets create a subset from the dataset. 
+#Since the column is character(string), we will select using str_detect()
+
+Downtown2000<-Data2000[str_detect(Data2000$NAME, "Census Tract 7|Census Tract 11"), ]
+
+#Now lets create a bounding box
+
+BoundingBox2<-st_bbox(Downtown2000)|>st_as_sfc()
+
+#Add the bounding box to the map 
+
+Gmap2<-Gmap1+geom_sf(data = BoundingBox2, color="orangered", alpha=0, lwd=0.5)+
+  theme(legend.position = c(0.1, 0.15))
+        
+#View Map
+Gmap2
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.format='svglite'}
+#Map for Downtown Austin 
+
+Gmap3<-ggplot(data = Downtown2000)+
+  geom_sf(aes(fill=HousingDensity))+
+  theme_minimal()+
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "none",
+        panel.border = element_rect(color = "orangered", 
+                                    fill = NA, 
+                                    size = 0.7))+
+   scale_fill_distiller(palette = "Greens",
+                        breaks=c(1000, 2000, 3000, 4000, 5000),
+                       limits=c(0, 5200), direction = 1)
+
+#View Map
+Gmap3
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.format='svglite'}
+#Now draw the two maps using cowplot.
+#We will first convert the plots to grobs using ggplotGrob since we are working with ggplot2
+
+GmapGrob1<-ggplotGrob(Gmap2)
+GmapGrob2<-ggplotGrob(Gmap3)
+
+FinalMap2<-ggdraw()+
+  draw_grob(GmapGrob1)+
+  draw_grob(GmapGrob2, x=0.37, height = 0.4)
+
+#View Map
+FinalMap2
+```
+
+Yay! We did it! We have achieved all the goals set for this tutorial. I hope you learned alot.
+
+<hr>
+
+**END OF TUTORIAL**
+
+<hr/>
