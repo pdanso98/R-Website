@@ -1,0 +1,12 @@
+name: "."
+title: "My Website"
+description: |
+  My Website
+output_dir: "Output"
+navbar:
+  left:
+    - text: "Home"
+      href: index.html
+output: 
+  html_document: 
+    theme: flatly

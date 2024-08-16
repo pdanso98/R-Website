@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About this blog",
+      "description": "Some additional details about the blog",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nMy Website\r\nHome\r\n\r\n\r\n☰\r\n\r\n\r\n  \r\n    \r\n      \r\n        \r\n        \r\n        \r\n      \r\n      \r\n    \r\n    \r\n      \r\n  Home\r\n\r\n      \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\nAbout this blog\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+      "last_modified": "2024-08-16T13:05:01-05:00"
+    },
+    {
+      "path": "index.html",
+      "title": "My Website",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nMy Website\r\nHome\r\n\r\n\r\n☰\r\n\r\n\r\n  \r\n    \r\n      \r\n        \r\n        \r\n        \r\n      \r\n      \r\n    \r\n    \r\n      \r\n  Home\r\n\r\n      \r\n  \r\n\r\n\r\n\r\n\r\n\r\n\r\nMy Website\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+      "last_modified": "2024-08-16T13:05:02-05:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}
