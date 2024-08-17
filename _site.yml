@@ -15,7 +15,7 @@ navbar:
 output: 
   html_document: 
     theme:
-      bg: "#040720"
+      bg: "#14313E"
       fg: "white"
       primary: "#3a99f8"
       secondary: "#0072B2"
@@ -24,3 +24,4 @@ output:
         google: "Prompt"
       code_font:
         google: "Source Code Pro"
+    css: styles.css

@@ -2,9 +2,9 @@
 title: "My Website"
 listing: posts
 output: 
-  html_document: 
+  html_document:
     theme:
-      bg: "#040720"
+      bg: "#14313E"
       fg: "white"
       primary: "#3a99f8"
       secondary: "#0072B2"
@@ -13,4 +13,5 @@ output:
         google: "Prompt"
       code_font:
         google: "Source Code Pro"
+      
 ---
