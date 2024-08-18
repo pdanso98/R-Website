@@ -1,5 +1,5 @@
 ---
-title: "My Website"
+title: "Simple Codes"
 listing: posts
 output: 
   html_document:
@@ -13,5 +13,10 @@ output:
         google: "Prompt"
       code_font:
         google: "Source Code Pro"
-      
 ---
+
+**Hi**, Welcome to the Homepage, before you leave, let me tell you a short story.
+
+*Once upon a time, the owner of this website became very bored and had nothing to do for fun. He decided to have a little fun by playing with codes to kill the boredom. He began by opening one of his favorite fun applications on his Windows desktop, RStudio was the name of that fun application. He started a new fun project immediately after the application opened and played with a few codes. The first few lines of code created this simple static website and the second few lines made the first project under the `R Projects Tab`. In less than two hours, the boredom was killed, he had fun and then decided to share his fun codes with others to make the world a fun place.*
+
+So the next time you see a new post on this website, know that someone got bored... `r emo::ji("laugh")`
