@@ -20,7 +20,6 @@ output:
         google: "Prompt"
       code_font:
         google: "Source Code Pro"
-
 ---
 
 <hr>
@@ -31,11 +30,11 @@ This is a tutorial on how to map spatial data with R. In this tutorial, census d
 
 ***Objectives***
 
-* Download census data from NHGIS
-* Prepare data for mapping
-* Map census data using tmap
-* Download census data using tidycensus
-* Map census data using ggplot2 
+-   Download census data from NHGIS
+-   Prepare data for mapping
+-   Map census data using tmap
+-   Download census data using tidycensus
+-   Map census data using ggplot2
 
 This tutorial assumes that the learner is familiar with or has basic knowledge of Geographic Information Systems. Now let's begin! :)
 
@@ -397,7 +396,7 @@ FinalMap2<-ggdraw()+
 FinalMap2
 ```
 
-Yay! We did it! We have achieved all the goals set for this tutorial. I hope you learned alot..
+Yay! We did it! We have achieved all the goals set for this tutorial. I hope you learned alot.
 
 <hr>
 
