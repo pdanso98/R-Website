@@ -54,12 +54,13 @@ download_file(
   path = 'HousingData/nhgis0045_ds120_1990_blck_grp.csv', package = "downloadthis",
   output_name = "Housing Data from NHGIS",
   button_label = "Download Housing Data",
-  button_type = "success",
+  button_type = "primary",
   has_icon = TRUE,
   icon = "fa fa-save",
   self_contained = FALSE
 )
 ```
+
 ```{r echo=FALSE}
 library(downloadthis)
 
@@ -67,7 +68,7 @@ download_file(
   path = 'HousingData/nhgis0045_ds120_1990_blck_grp_codebook.txt', package = "downloadthis",
   output_name = "Codebook for the Housing Data",
   button_label = "Download Census Data Codebook",
-  button_type = "success",
+  button_type = "primary",
   has_icon = TRUE,
   icon = "fa fa-save",
   self_contained = FALSE
@@ -81,7 +82,7 @@ download_file(
   path = 'HousingData/TX_blck_grp_1990.shp', package = "downloadthis",
   output_name = "Texas Shapefile",
   button_label = "Download Shapefile",
-  button_type = "success",
+  button_type = "primary",
   has_icon = TRUE,
   icon = "fa fa-save",
   self_contained = FALSE
