@@ -397,7 +397,7 @@ FinalMap2<-ggdraw()+
 FinalMap2
 ```
 
-Yay! We did it! We have achieved all the goals set for this tutorial. I hope you learned alot.
+Yay! We did it! We have achieved all the goals set for this tutorial. I hope you learned alot..
 
 <hr>
 
