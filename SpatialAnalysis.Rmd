@@ -279,7 +279,7 @@ Hurray! We have created our final map for part one of this tutorial. We can now 
 
 <hr>
 
-<hr/>
+<hr>
 
 ### *PART TWO*
 
@@ -447,4 +447,4 @@ In this tutorial, we downloaded census data using the tidycensus package, import
 
 **END OF TUTORIAL**
 
-<hr/>
+<hr>
