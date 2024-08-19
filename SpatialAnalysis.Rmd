@@ -1,7 +1,6 @@
 ---
 title: "Simple Spatial Analysis With R"
 author: "Author: Patrick Danso"
-date: "Date: 2024-08-10"
 output: 
   html_document: 
     toc: true
@@ -47,6 +46,49 @@ This tutorial assumes that the learner is familiar with or has basic knowledge o
 #### Data Cleaning
 
 The first step to mapping the census data obtained from the NHGIS website is to look at the dataset and then process it for mapping. This section aims to import the downloaded dataset into R and make them clean enough for mapping. The `dplyr` tool is required to help with easy data manipulation. This function forms part of the [`tidyverse package`](https://www.tidyverse.org/packages/), thus, while it can be installed and opened individually, installing and opening the full `tidyverse` is ideal for this tutorial. The [`sf package`](https://r-spatial.github.io/sf/) is useful for handling spatial vector data and it will be useful in this tutorial. This tutorial assumes that all the required packages have already been installed in R. If any package has not been installed, use the `install.packages()` function to install it.
+
+```{r echo=FALSE}
+library(downloadthis)
+
+download_file(
+  path = 'HousingData/nhgis0045_ds120_1990_blck_grp.csv', package = "downloadthis",
+  output_name = "Housing Data from NHGIS",
+  button_label = "Download Housing Data",
+  button_type = "success",
+  has_icon = TRUE,
+  icon = "fa fa-save",
+  self_contained = FALSE
+)
+```
+```{r echo=FALSE}
+library(downloadthis)
+
+download_file(
+  path = 'HousingData/nhgis0045_ds120_1990_blck_grp_codebook.txt', package = "downloadthis",
+  output_name = "Codebook for the Housing Data",
+  button_label = "Download Census Data Codebook",
+  button_type = "success",
+  has_icon = TRUE,
+  icon = "fa fa-save",
+  self_contained = FALSE
+)
+```
+
+```{r echo=FALSE}
+library(downloadthis)
+
+download_file(
+  path = 'HousingData/TX_blck_grp_1990.shp', package = "downloadthis",
+  output_name = "Texas Shapefile",
+  button_label = "Download Shapefile",
+  button_type = "success",
+  has_icon = TRUE,
+  icon = "fa fa-save",
+  self_contained = FALSE
+)
+```
+
+**Click on the download links above this text to download the datasets used in the first part of this tutorial.**
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 #Open the required libraries 
