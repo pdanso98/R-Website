@@ -78,9 +78,8 @@ download_file(
 ```{r echo=FALSE}
 library(downloadthis)
 
-download_file(
-  path = 'HousingData/TX_blck_grp_1990.shp', package = "downloadthis",
-  output_name = "Texas Shapefile",
+download_link(
+  link = "https://github.com/pdanso98/R-website/raw/main/HousingData/TX_blck_grp_1990.shp",
   button_label = "Download Shapefile",
   button_type = "primary",
   has_icon = TRUE,
