@@ -88,7 +88,7 @@ download_file(
 )
 ```
 
-**Click on the download links above this text to download the datasets used in the first part of this tutorial.**
+***Click on the download links above this text to download the datasets used in the first part of this tutorial.***
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 #Open the required libraries 
