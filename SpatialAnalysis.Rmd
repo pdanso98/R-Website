@@ -56,7 +56,7 @@ library(sf)
 
 #Import the data and store it under a new name
 
-Data1990<-read.csv("C:\\Users\\Patrick\\Downloads\\Housing Data\\nhgis0045_ds120_1990_blck_grp.csv")
+Data1990<-read.csv("INSERT YOUR FILE PATH HERE")
 
 #Have a glance at the data
 
@@ -73,7 +73,7 @@ Data1990<-Data1990|>filter(COUNTY=="Travis")|>select(GISJOIN, COUNTY, TRACTA, ES
 
 #Now import the shapefile
 
-Shape1990<-read_sf("C:\\Users\\Patrick\\Downloads\\Shapefiles\\US_blck_grp_1990.shp")
+Shape1990<-read_sf("INSERT YOUR FILE PATH HERE")
 
 #Take a look at the shapefile
 
@@ -263,7 +263,7 @@ Variables<-load_variables(year = 2000, "sf1")
 #From the table we can see that the total housing unit variable is named 'H001001'. We will be using this to download our data. 
 
 Data2000<-get_decennial(geography = "block group", variables = c(HousingUnits="H001001"), year=2000, state = "TX",
-                        county = "Travis", key = "73a534be4b8cd8aa9d67ff375d2a0a9546efdb26", 
+                        county = "Travis", key = "INSERT YOUR KEY HERE", 
                         sumfile = "sf1", geometry = TRUE)
 
 #Now let's structure our data in a nice way.
