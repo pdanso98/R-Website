@@ -90,6 +90,24 @@ download_link(
 
 ***Click on the download links above this text to download the datasets used in the first part of this tutorial.***
 
+```{r eval=FALSE, include=FALSE}
+#Make all the codes copyable
+library(klippy)
+
+#The Klippy package helps with this task. This code will not display in the tutorial.
+
+klippy(position = c("top","right"))
+```
+
+```{r echo=FALSE}
+#This code will add a go to top button
+library(gotop)
+
+#This code will not appear in the final document
+use_gotop(appear = 10000, src = "fa-solid fa-circle-arrow-up")
+```
+
+
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 #Open the required libraries 
 
@@ -338,7 +356,7 @@ Data2000<-Data2000|>st_transform(6587)
 
 ```
 
-Notice that we did not covert the data to sf features. That is because the data from the tidycensus package is pre-processed for mapping.
+Notice that we did not convert the data to sf features. That is because the data from the tidycensus package is pre-processed for mapping.
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE, fig.keep='last', fig.format='svglite'}
 #Create a map for Housing Density in Travis County using ggplot2 and then store it as an object

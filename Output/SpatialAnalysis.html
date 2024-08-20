@@ -32,6 +32,9 @@
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/font-awesome-6.5.2/js/script.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/v4-shims.css" rel="stylesheet" />
+<script src="site_libs/goTop-2.0.0/assets/jquery.gotop.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -416,6 +419,10 @@ the <code>install.packages()</code> function to install it.</p>
 </a>
 <p><strong><em>Click on the download links above this text to download
 the datasets used in the first part of this tutorial.</em></strong></p>
+<div id='goTop'></div>
+<script>$(function () {
+          $('#goTop').goTop({"container":"","appear":10000,"scrolltime":800,"src":"fa-solid fa-circle-arrow-up","width":45,"place":"right","color":"","fadein":500,"fadeout":500,"opacity":0.5,"marginX":2,"marginY":2,"zIndex":9});
+         });</script>
 <pre class="r"><code>#Open the required libraries 
 
 library(tidyverse)
@@ -609,7 +616,7 @@ Map1&lt;-tm_shape(Data1990)+
 
 #View Map
 Map1</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-9-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-11-1.svg" width="672" /></p>
 <p>Hurray! We have created our first map for this tutorial in a few easy
 steps. It is now time to locate Downtown Austin from Travis County and
 then and then create an inset map showing the housing density in
@@ -658,7 +665,7 @@ Map2&lt;-Map1+tm_shape(BoundingBox)+tm_polygons(border.col = &quot;orangered&quo
 
 #View Map
 Map2</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-11-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-13-1.svg" width="672" /></p>
 <p>Yay! We created our second map for this tutorial. We are making
 Progress!</p>
 <p>Finally let’s create the inset map to be added to the final map.</p>
@@ -673,7 +680,7 @@ Map3&lt;-tm_shape(Downtown1990, bbox = BoundingBox)+
 
 #View the Map
 Map3</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-12-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-14-1.svg" width="672" /></p>
 <p>Now let’s add <em>Map3</em> as an inset map to <em>Map2</em>. Here,
 we will convert the maps to Grid Graphic Object. The reason for doing
 this is to enable us draw the the plots and store it as a single plot.
@@ -698,7 +705,7 @@ FinalMap&lt;-ggdraw()+
 
 #View the Map
 FinalMap</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-13-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-15-1.svg" width="672" /></p>
 <p>Hurray! We have created our final map for part one of this tutorial.
 We can now export the map and use it as needed. This marks the end of
 Part One of this tutorial. See you in Part Two! :)</p>
@@ -775,7 +782,7 @@ Data2000$HousingDensity&lt;-drop_units(Data2000$HousingDensity)
 #Project using the same projection used in Part 1
 
 Data2000&lt;-Data2000|&gt;st_transform(6587)</code></pre>
-<p>Notice that we did not covert the data to sf features. That is
+<p>Notice that we did not convert the data to sf features. That is
 because the data from the tidycensus package is pre-processed for
 mapping.</p>
 <pre class="r"><code>#Create a map for Housing Density in Travis County using ggplot2 and then store it as an object
@@ -810,7 +817,7 @@ Gmap1&lt;-Gmap1+annotation_north_arrow(location=&quot;tr&quot;, style = north_ar
 
 #View Map 
 Gmap1</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-16-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-18-1.svg" width="672" /></p>
 <p>Notice how we passed the breaks through geom_sf(). Now let’s create
 an inset map and then add it the map. <a
 href="https://cran.r-project.org/web/packages/ggspatial/index.html">Click
@@ -839,7 +846,7 @@ Gmap2&lt;-Gmap1+geom_sf(data = BoundingBox2, color=&quot;orangered&quot;, alpha=
         
 #View Map
 Gmap2</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-17-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-19-1.svg" width="672" /></p>
 <pre class="r"><code>#Map for Downtown Austin 
 
 Gmap3&lt;-ggplot(data = Downtown2000)+
@@ -859,7 +866,7 @@ Gmap3&lt;-ggplot(data = Downtown2000)+
 
 #View Map
 Gmap3</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-18-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-20-1.svg" width="672" /></p>
 <pre class="r"><code>#Now draw the two maps using cowplot.
 #We will first convert the plots to grobs using ggplotGrob since we are working with ggplot2
 
@@ -872,7 +879,7 @@ FinalMap2&lt;-ggdraw()+
 
 #View Map
 FinalMap2</code></pre>
-<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-19-1.svg" width="672" /></p>
+<p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-21-1.svg" width="672" /></p>
 <p>Yay! We did it! We have achieved all the goals set for this
 tutorial.</p>
 <p>In this tutorial, we downloaded census data using the tidycensus
