@@ -17,7 +17,7 @@ output:
     theme:
       bg: "#14313E"
       fg: "white"
-      primary: "#3a99f8"
+      primary: "#0072B2"
       secondary: "#0072B2"
       success: "#009E73"
       base_font:

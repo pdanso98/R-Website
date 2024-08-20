@@ -12,7 +12,7 @@ output:
     theme:
       bg: "#14313E"
       fg: "white"
-      primary: "#3a99f8"
+      primary: "#0072B2"
       secondary: "#0072B2"
       success: "#009E73"
       base_font:
@@ -54,7 +54,7 @@ download_file(
   path = 'HousingData/nhgis0045_ds120_1990_blck_grp.csv', package = "downloadthis",
   output_name = "Housing Data from NHGIS",
   button_label = "Download Housing Data",
-  button_type = "primary",
+  button_type = "default",
   has_icon = TRUE,
   icon = "fa fa-save",
   self_contained = FALSE
@@ -68,7 +68,7 @@ download_file(
   path = 'HousingData/nhgis0045_ds120_1990_blck_grp_codebook.txt', package = "downloadthis",
   output_name = "Codebook for the Housing Data",
   button_label = "Download Census Data Codebook",
-  button_type = "primary",
+  button_type = "default",
   has_icon = TRUE,
   icon = "fa fa-save",
   self_contained = FALSE
@@ -81,7 +81,7 @@ library(downloadthis)
 download_link(
   link = "https://github.com/pdanso98/R-website/raw/main/HousingData/TX_blck_grp_1990.shp",
   button_label = "Download Shapefile",
-  button_type = "primary",
+  button_type = "default",
   has_icon = TRUE,
   icon = "fa fa-save",
   self_contained = FALSE
@@ -90,15 +90,6 @@ download_link(
 
 ***Click on the download links above this text to download the datasets used in the first part of this tutorial.***
 
-```{r eval=FALSE, include=FALSE}
-#Make all the codes copyable
-library(klippy)
-
-#The Klippy package helps with this task. This code will not display in the tutorial.
-
-klippy(position = c("top","right"))
-```
-
 ```{r echo=FALSE}
 #This code will add a go to top button
 library(gotop)
@@ -106,7 +97,6 @@ library(gotop)
 #This code will not appear in the final document
 use_gotop(appear = 10000, src = "fa-solid fa-circle-arrow-up")
 ```
-
 
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 #Open the required libraries 
@@ -129,7 +119,9 @@ Fortunately, the data used in this tutorial is structured with few processing to
 #Now let's clean the data and filter out Travis from the COUNTY variable
 #Also, select the needed variables and then rename the Total Housing Units
 
-Data1990<-Data1990|>filter(COUNTY=="Travis")|>select(GISJOIN, COUNTY, TRACTA, ESA001)|>rename(HousingUnits=ESA001)
+Data1990<-Data1990|>filter(COUNTY=="Travis")|>
+  select(GISJOIN, COUNTY, TRACTA, ESA001)|>
+  rename(HousingUnits=ESA001)
 
 #Now import the shapefile
 
@@ -172,7 +164,8 @@ suggest_crs(Data1990)
 Data1990<-Data1990|>st_transform(6587)
 
 #Now that the dataset has been converted to sf objects successfully and projected, lets calculate the area for each block group
-#Getting the area will help with calculating the housing density. The Units library will be useful to set the unit for our calculations.
+#Getting the area will help with calculating the housing density. 
+#The Units package will be useful for setting the unit for our calculations.
 library(units)
 
 #Calculate the area and store it under a new column
@@ -248,6 +241,10 @@ BoundingBox<-st_bbox(Downtown1990)|>st_as_sfc()
 
 Map2<-Map1+tm_shape(BoundingBox)+tm_polygons(border.col = "orangered", lwd=1.5, alpha = 0)+
   tm_compass(type = "8star", size = 3, position = c("right","top"))
+
+#Add a Map title
+
+Map2<-Map2+tm_layout(title = "Housing Density in Travis County(1990)-\nEmphasis on Downtown Austin")
 
 #View Map
 Map2
@@ -414,6 +411,9 @@ BoundingBox2<-st_bbox(Downtown2000)|>st_as_sfc()
 
 Gmap2<-Gmap1+geom_sf(data = BoundingBox2, color="orangered", alpha=0, lwd=0.5)+
   theme(legend.position = c(0.1, 0.15))
+
+#Add a map title
+Gmap2<-Gmap2+labs(title="Housing Density in Travis County(2000) - Emphasis on Downtown Austin")
         
 #View Map
 Gmap2
@@ -456,9 +456,28 @@ FinalMap2<-ggdraw()+
 FinalMap2
 ```
 
+
+### Observation
+
+Comparing the map in part one to the map in part two, it can be seen that there has been a significant increase in the housing or residential density from the year 1990 to 2000 across various block groups. For the purpose of this tutorial we can compare the two maps as a form of time series analysis. This is because, the census tracts and block groups remained the same from 1990 to 2000. However, in situations where there the census tracts are not the same or changed, it is required to make all the tracts the same before a time series analysis can be made. This method of converting different census tracts into one that looks the same across time is a form of "Spatial Interpolation". In upcoming tutorials, we will work with datasets that require us to use this method.
+
+
+### Conclusion
+
 Yay! We did it! We have achieved all the goals set for this tutorial.
 
 In this tutorial, we downloaded census data using the tidycensus package, imported census data from the NHGIS website, and mapped census data using `ggplot2` and the `tmap (Thematic Map) packages` in R for a simple spatial analysis. I hope you found this tutorial helpful.
+
+
+### References
+
+* Steven Manson, Jonathan Schroeder, David Van Riper, Katherine Knowles, Tracy Kugler, Finn Roberts, and Steven Ruggles.
+  IPUMS National Historical Geographic Information System: Version 18.0 
+  [dataset]. Minneapolis, MN: IPUMS. 2023.
+  http://doi.org/10.18128/D050.V18.0
+  
+* IPUMS NHGIS, University of Minnesota, www.nhgis.org.
+
 
 <hr>
 
