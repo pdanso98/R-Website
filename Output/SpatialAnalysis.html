@@ -408,7 +408,7 @@ href="https://www.tidyverse.org/packages/"><code>tidyverse package</code></a>,
 thus, while it can be installed and opened individually, installing and
 opening the full <code>tidyverse</code> is ideal for this tutorial. The
 <a href="https://r-spatial.github.io/sf/"><code>sf package</code></a> is
-useful for handling spatial vector data and it will be useful in this
+useful for handling spatial vector data and will be useful in this
 tutorial. This tutorial assumes that all the required packages have
 already been installed in R. If any package has not been installed, use
 the <code>install.packages()</code> function to install it.</p>
@@ -430,7 +430,7 @@ library(sf)
 
 #Import the data and store it under a new name
 
-Data1990&lt;-read.csv(&quot;INSERT YOUR FILE PATH HERE&quot;)
+Data1990&lt;-read.csv(&quot;C:\\Users\\Patrick\\Downloads\\Housing Data\\nhgis0045_ds120_1990_blck_grp.csv&quot;)
 
 #Have a glance at the data
 
@@ -470,13 +470,13 @@ head(Data1990)</code></pre>
 ## 4 -95754825    NA    607
 ## 5 -95817188    NA    227
 ## 6 -95784733    NA    401</code></pre>
-<p>Fortunately, the data used in this tutorial is structured with few
-processing to be made. From the table, the Total Number of Housing Units
+<p>Fortunately, the data used in this tutorial is structured with little
+processing to be done. From the table, the Total Number of Housing Units
 is assigned to column <em>ESA001</em>. The GISJOIN Column is a character
-variable which gives a unique id to each row and it is very useful for
+variable that gives a unique ID to each row and it is very useful for
 Spatial Joins. The <em>TRACTA</em> Column provides the census tract code
-for each each county and it is very useful with selecting places within
-each County.</p>
+for each county and it is very useful for selecting places within each
+County.</p>
 <pre class="r"><code>#Now let&#39;s clean the data and filter out Travis from the COUNTY variable
 #Also, select the needed variables and then rename the Total Housing Units
 
@@ -486,7 +486,7 @@ Data1990&lt;-Data1990|&gt;filter(COUNTY==&quot;Travis&quot;)|&gt;
 
 #Now import the shapefile
 
-Shape1990&lt;-read_sf(&quot;INSERT YOUR FILE PATH HERE&quot;)
+Shape1990&lt;-read_sf(&quot;C:\\Users\\Patrick\\Downloads\\Shapefiles\\US_blck_grp_1990.shp&quot;)
 
 #Take a look at the shapefile
 
@@ -565,7 +565,7 @@ suggest_crs(Data1990)</code></pre>
 
 Data1990&lt;-Data1990|&gt;st_transform(6587)
 
-#Now that the dataset has been converted to sf objects successfully and projected, lets calculate the area for each block group
+#Now that the dataset has been converted to sf objects successfully and projected, let&#39;s calculate the area for each block group
 #Getting the area will help with calculating the housing density. 
 #The Units package will be useful for setting the unit for our calculations.
 library(units)
@@ -574,7 +574,7 @@ library(units)
 
 Data1990$AreaPerSqKm&lt;-round(set_units(st_area(Data1990$geometry), km^2), digits = 2)
 
-#Now lets calculate housing Density
+#Now let&#39;s calculate the housing Density
 
 Data1990$HousingDensity&lt;-Data1990$HousingUnits/Data1990$AreaPerSqKm
 
@@ -622,25 +622,24 @@ Map1</code></pre>
 <p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-10-1.svg" width="672" /></p>
 <p>Hurray! We have created our first map for this tutorial in a few easy
 steps. It is now time to locate Downtown Austin from Travis County and
-then and then create an inset map showing the housing density in
+then and then create an inset map showing the housing density in the
 Downtown Austin Neighborhood.</p>
 </div>
 <div id="creating-an-inset-map" class="section level4">
 <h4>Creating an Inset Map</h4>
-<p>To create the inset map, we have to first locate Downtown Austin
+<p>To create the inset map, we have to first locate the Downtown Austin
 Neighborhood from the dataset and then create a subset. A simple way to
 locate the city of Austin from our dataset is to use the Tract code.
 From our data, the tract code for each census geography is stored under
-<em>TRACTA</em> column. Now the question is; how can we find the tract
-code for Travis County?</p>
+the <em>TRACTA</em> column. Now the question is; how can we find the
+tract code for Travis County?</p>
 <p>While a simple search will do the magic, the <a
 href="https://geomap.ffiec.gov/ffiecgeomap/">Census Geocoder Website</a>
-is very efficient. Note that, tract codes change with time and thus will
-strongly recommend to check the updated tract codes on the Geocoder
-website provided above. For the purpose of this tutorial, refer to the
-<a
+is very efficient. Note that, tract codes change with time, and thus
+will strongly recommend checking the updated tract codes on the Geocoder
+website provided above. For this tutorial, refer to the <a
 href="https://www2.census.gov/geo/maps/trt1990/st48_Texas/48453_Travis/90T48453_A01.pdf">Census
-Beureau Link Here</a> to view the census tracts for the year 1990.</p>
+Bureau Link Here</a> to view the census tracts for the year 1990.</p>
 <pre class="r"><code>#The census tract codes for Downtown Austin in 1990 are 7 and 11.
 #The neighborhood had two census tracts in 1990. Now lets create a subset from the dataset. 
 
@@ -655,7 +654,7 @@ view(Downtown1990)
 <h5>Create a Bounding Box</h5>
 <p>In this step, we are going to create a bounding box to mark the
 boundary of the neighborhood. We can do this by creating a simple
-feature list column from our subset and then add it to
+feature list column from our subset and then adding it to
 <em>Map1</em>.</p>
 <pre class="r"><code>#Create bounding box for the neighborhood
 
@@ -675,8 +674,8 @@ Map2</code></pre>
 <p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-12-1.svg" width="672" /></p>
 <p>Yay! We created our second map for this tutorial. We are making
 Progress!</p>
-<p>Finally let’s create the inset map to be added to the final map.</p>
-<pre class="r"><code>#Create a map from Downtown1990 dataset with similar breaks as that of Map1
+<p>Finally, let’s create the inset map to be added to the final map.</p>
+<pre class="r"><code>#Create a map from the Downtown1990 dataset with similar breaks as that of Map1
 
 Map3&lt;-tm_shape(Downtown1990, bbox = BoundingBox)+
   tm_polygons(col = &quot;HousingDensity&quot;, 
@@ -689,8 +688,8 @@ Map3&lt;-tm_shape(Downtown1990, bbox = BoundingBox)+
 Map3</code></pre>
 <p><img src="SpatialAnalysis_files/figure-html/unnamed-chunk-13-1.svg" width="672" /></p>
 <p>Now let’s add <em>Map3</em> as an inset map to <em>Map2</em>. Here,
-we will convert the maps to Grid Graphic Object. The reason for doing
-this is to enable us draw the the plots and store it as a single plot.
+we will convert the maps to Grid Graphic Objects. The reason for doing
+this is to enable us to draw the plots and store them as a single plot.
 In this tutorial, we will convert the plots to <code>grob</code> using
 the <code>tm_grob</code> function since we are working with tmaps. After
 that, we will use functions from the <a
@@ -699,7 +698,7 @@ to draw the grobs (Graphic Objects).</p>
 <pre class="r"><code>#Open cowplot
 library(cowplot) 
 
-#Export plots to grobs
+#Export the plots to grobs
 #Note the aspect ratios generated for each grob. This will help with placements and adjustments.
 Map2Grob&lt;-tmap_grob(Map2)
 Map3Grob&lt;-tmap_grob(Map3)
@@ -727,13 +726,13 @@ Part One of this tutorial. See you in Part Two! :)</p>
 <p>It’s nice to see you again :) I am glad to see you make progress!</p>
 <p>In this part of the tutorial, We are going to create a similar map
 just like the one we made in part one. This means we are going to create
-a housing density map for Travis County-Texas with emphasis on Downtown
-Austin. However, this part differs from that of the previous with
-regards to data importation, year and mapping package.</p>
+a housing density map for Travis County-Texas with an emphasis on
+Downtown Austin. However, this part differs from that of the previous
+with regards to data importation, year, and mapping package.</p>
 <p>Here, we are going to download our census data from the United States
 Census Bureau using the <code>tidycensus package</code> and then map the
 census data using <code>ggplot2</code>. The aim of this part of the
-tutorial is learn alternatives to accessing census data and mapping
+tutorial is learning alternatives to accessing census data and mapping
 them. R provides various alternatives to mapping spatial data and it is
 almost impossible to cover all in this tutorial. However, we will cover
 most of them in upcoming tutorials.</p>
@@ -746,12 +745,12 @@ href="https://walker-data.com/tidycensus/articles/basic-usage.html"><code>tidyce
 to learn the package’s syntax. Before we proceed, we will need an API
 Key to access the data. <a
 href="https://api.census.gov/data/key_signup.html">Click Here</a> to
-request Census Data API Key.</p>
+request the Census Data API Key.</p>
 <p>Now let’s download the required data using tidycensus. Here, we will
 be using decennial data for the year 2000. We will be using <em>summary
 file 1</em> from the 2000 decennial census since we are working with
 demographic data.</p>
-<pre class="r"><code>#Lets take a look at the variables for the year 1990 and then Identify the the name of the variable needed for our project
+<pre class="r"><code>#Let&#39;s take a look at the variables for the year 1990 and then Identify the the name of the variable needed for our project
 library(tidycensus)
 
 Variables&lt;-load_variables(year = 2000, &quot;sf1&quot;)
@@ -759,18 +758,18 @@ Variables&lt;-load_variables(year = 2000, &quot;sf1&quot;)
 #From the table we can see that the total housing unit variable is named &#39;H001001&#39;. We will be using this to download our data. 
 
 Data2000&lt;-get_decennial(geography = &quot;block group&quot;, variables = c(HousingUnits=&quot;H001001&quot;), year=2000, state = &quot;TX&quot;,
-                        county = &quot;Travis&quot;, key = &quot;INSERT YOUR API KEY HERE&quot;, 
+                        county = &quot;Travis&quot;, key = &quot;73a534be4b8cd8aa9d67ff375d2a0a9546efdb26&quot;, 
                         sumfile = &quot;sf1&quot;, geometry = TRUE)
 
 #Now let&#39;s structure our data in a nice way.
 
 Data2000&lt;-Data2000|&gt;pivot_wider(names_from = variable, values_from = value)</code></pre>
 <p>From the code above, we downloaded our data using tidycensus while
-setting <code>geometry</code> to <code>true</code> to enable us map our
-data. The data downloaded from the tidycensus package is pre-prepared
-and thus, there is little or nothing to do with regards to data cleaning
-for the purpose of this tutorial.</p>
-<p>Now let’s map our data using <code>ggplot 2</code>.</p>
+setting <code>geometry</code> to <code>true</code> to enable us to map
+our data. The data downloaded from the tidycensus package is
+pre-prepared and thus, there is little or nothing to do with regard to
+data cleaning for this tutorial.</p>
+<p>Now let’s map our data using <code>ggplot2</code>.</p>
 </div>
 <div id="mapping-with-ggplot2" class="section level4">
 <h4>Mapping with GGplot2</h4>
@@ -778,11 +777,11 @@ for the purpose of this tutorial.</p>
 
 Data2000$AreaPerSqKm&lt;-round(set_units(st_area(Data2000$geometry), km^2), digits = 2)
 
-#Now lets calculate housing Density
+#Now let&#39;s calculate the housing Density
 
 Data2000$HousingDensity&lt;-Data2000$HousingUnits/Data2000$AreaPerSqKm
 
-#Now lets drop the units. This is to enable easy mapping with geom_sf
+#Now let&#39;s drop the units. This is to enable easy mapping with geom_sf
 
 Data2000$HousingDensity&lt;-drop_units(Data2000$HousingDensity)
 
@@ -817,7 +816,7 @@ Gmap1&lt;-ggplot(data = Data2000)+
 
 Gmap1
 
-#Now lets add some elements to our map. We can do this by installing ggspatial
+#Now let&#39;s add some elements to our map. We can do this by installing ggspatial
 library(ggspatial)
 
 Gmap1&lt;-Gmap1+annotation_north_arrow(location=&quot;tr&quot;, style = north_arrow_nautical())
@@ -828,7 +827,7 @@ Gmap1</code></pre>
 <p>Notice how we passed the breaks through geom_sf(). Now let’s create
 an inset map and then add it the map. <a
 href="https://cran.r-project.org/web/packages/ggspatial/index.html">Click
-This Link</a> to learn how <code>ggspatial</code> work.</p>
+This Link</a> to learn how <code>ggspatial</code> works.</p>
 </div>
 <div id="creating-an-inset-map-1" class="section level4">
 <h4>Creating an Inset Map</h4>
@@ -842,7 +841,7 @@ year 2000.</p>
 
 Downtown2000&lt;-Data2000[str_detect(Data2000$NAME, &quot;Census Tract 7|Census Tract 11&quot;), ]
 
-#Now lets create a bounding box
+#Now let&#39;s create a bounding box
 
 BoundingBox2&lt;-st_bbox(Downtown2000)|&gt;st_as_sfc()
 
@@ -895,17 +894,16 @@ FinalMap2</code></pre>
 <div id="observation" class="section level3">
 <h3>Observation</h3>
 <p>Comparing the map in part one to the map in part two, it can be seen
-that there has been a significant increase in the housing or residential
-density from the year 1990 to 2000 across various block groups. For the
-purpose of this tutorial we can compare the two maps as a form of time
-series analysis. This is because, the census tracts and block groups
-remained the same from 1990 to 2000. However, in situations where there
-the census tracts are not the same or changed, it is required to make
-all the tracts the same before a time series analysis can be made. This
-method of converting different census tracts into one that looks the
-same across time is a form of “Spatial Interpolation”. In upcoming
-tutorials, we will work with datasets that require us to use this
-method.</p>
+that there has been a significant increase in housing or residential
+density from the year 1990 to 2000 across various block groups. For this
+tutorial, we can compare the two maps as a form of time series analysis.
+This is because the census tracts and block groups remained the same
+from 1990 to 2000. However, in situations where the census tracts are
+not the same or changed, it is required to make all the tracts the same
+before a time series analysis can be made. This method of converting
+different census tracts into one that looks the same across time is a
+form of “Spatial Interpolation”. In upcoming tutorials, we will work
+with datasets that require us to use this method.</p>
 </div>
 <div id="conclusion" class="section level3">
 <h3>Conclusion</h3>
