@@ -344,7 +344,9 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="mailto:dansopatrick98@outlook.com">Email</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -430,7 +432,7 @@ library(sf)
 
 #Import the data and store it under a new name
 
-Data1990&lt;-read.csv(&quot;INSERT YOUR FILE PATH HERE&quot;)
+Data1990&lt;-read.csv(&quot;C:\\Users\\Patrick\\Downloads\\Housing Data\\nhgis0045_ds120_1990_blck_grp.csv&quot;)
 
 #Have a glance at the data
 
@@ -486,7 +488,7 @@ Data1990&lt;-Data1990|&gt;filter(COUNTY==&quot;Travis&quot;)|&gt;
 
 #Now import the shapefile
 
-Shape1990&lt;-read_sf(&quot;INSERT YOUR FILE PATH HERE&quot;)
+Shape1990&lt;-read_sf(&quot;C:\\Users\\Patrick\\Downloads\\Shapefiles\\US_blck_grp_1990.shp&quot;)
 
 #Take a look at the shapefile
 
@@ -758,7 +760,7 @@ Variables&lt;-load_variables(year = 2000, &quot;sf1&quot;)
 #From the table we can see that the total housing unit variable is named &#39;H001001&#39;. We will be using this to download our data. 
 
 Data2000&lt;-get_decennial(geography = &quot;block group&quot;, variables = c(HousingUnits=&quot;H001001&quot;), year=2000, state = &quot;TX&quot;,
-                        county = &quot;Travis&quot;, key = &quot;INSERT YOUR CENSUS API KEY HERE&quot;, 
+                        county = &quot;Travis&quot;, key = &quot;73a534be4b8cd8aa9d67ff375d2a0a9546efdb26&quot;, 
                         sumfile = &quot;sf1&quot;, geometry = TRUE)
 
 #Now let&#39;s structure our data in a nice way.
@@ -897,14 +899,14 @@ FinalMap2</code></pre>
 that there has been a significant increase in housing or residential
 density from the year 1990 to 2000 across various block groups. For this
 tutorial, we can compare the two maps as a form of time series analysis.
-This is because the census tracts and block groups for the Downtown Austin
-Neighborhood remained the same from 1990 to 2000. 
-However, in situations where the census tracts are
-not the same or changed, it is required to make all the tracts the same
-before a time series analysis can be made. This method of converting
-different census tracts into one that looks the same across time is a
-form of “Spatial Interpolation”. In upcoming tutorials, we will work
-with datasets that require us to use this method.</p>
+This is because the census tracts and block groups for the Downtown
+Austin Neighborhood remained the same from 1990 to 2000. However, in
+situations where the census tracts are not the same or changed, it is
+required to make all the tracts the same before a time series analysis
+can be made. This method of converting different census tracts into one
+that looks the same across time is a form of “Spatial Interpolation”. In
+upcoming tutorials, we will work with datasets that require us to use
+this method.</p>
 </div>
 <div id="conclusion" class="section level3">
 <h3>Conclusion</h3>

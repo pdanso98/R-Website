@@ -4,7 +4,6 @@ description: |
   My Website
 output_dir: "Output"
 navbar:
-  search: true
   left:
     - text: "Home"
       href: index.html
@@ -12,6 +11,9 @@ navbar:
       menu: 
        - text: "Mapping With R"
          href: SpatialAnalysis.html
+  right:
+    - text: "Email"
+      href: 'mailto:dansopatrick98@outlook.com'
 output: 
   html_document: 
     theme:

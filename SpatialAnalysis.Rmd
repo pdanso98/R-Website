@@ -458,7 +458,7 @@ FinalMap2
 
 ### Observation
 
-Comparing the map in part one to the map in part two, it can be seen that there has been a significant increase in housing or residential density from the year 1990 to 2000 across various block groups. For this tutorial, we can compare the two maps as a form of time series analysis. This is because the census tracts and block groups remained the same from 1990 to 2000. However, in situations where the census tracts are not the same or changed, it is required to make all the tracts the same before a time series analysis can be made. This method of converting different census tracts into one that looks the same across time is a form of "Spatial Interpolation". In upcoming tutorials, we will work with datasets that require us to use this method.
+Comparing the map in part one to the map in part two, it can be seen that there has been a significant increase in housing or residential density from the year 1990 to 2000 across various block groups. For this tutorial, we can compare the two maps as a form of time series analysis. This is because the census tracts and block groups for the Downtown Austin Neighborhood remained the same from 1990 to 2000. However, in situations where the census tracts are not the same or changed, it is required to make all the tracts the same before a time series analysis can be made. This method of converting different census tracts into one that looks the same across time is a form of "Spatial Interpolation". In upcoming tutorials, we will work with datasets that require us to use this method.
 
 ### Conclusion
 
