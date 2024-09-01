@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Author: Patrick Danso" />
+
+
+<title>Buffalo Commons Project</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link href="site_libs/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-5.3.1/bootstrap.bundle.min.js"></script>
+<link href="site_libs/Prompt-0.4.9/font.css" rel="stylesheet" />
+<link href="site_libs/Source_Code_Pro-0.4.9/font.css" rel="stylesheet" />
+<script src="site_libs/bs3compat-0.8.0/transition.js"></script>
+<script src="site_libs/bs3compat-0.8.0/tabs.js"></script>
+<script src="site_libs/bs3compat-0.8.0/bs3compat.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    R Projects
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="SpatialAnalysis.html">Mapping With R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ArcGIS Projects
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="The-Buffalo-Commons.html">Buffalo Commons Project</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="mailto:dansopatrick98@outlook.com">Email</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Buffalo Commons Project</h1>
+<h4 class="author">Author: Patrick Danso</h4>
+
+</div>
+
+
+<hr>
+<div id="introduction" class="section level3">
+<h3>INTRODUCTION</h3>
+<p>One of the issues associated with the increasing population of humans
+is their impact on biodiversity. As the human population increases,
+their impacts and influence on biodiversity also increase. To reduce
+human impacts on biodiversity, measures such as nature preserves have
+been introduced to maintain and safeguard biodiversity and to provide a
+sanctuary for species(NationalGeographic 2019). Over the years, many
+have come up with ideas on how to set up various nature preserves, as
+well as where to locate these preserves.</p>
+<p>Among such proposals is the one introduced by Frank J. Popper and
+Deborah Popper in a 1987 essay. The idea was to create an extensive
+nature preserve by restoring 139,000 square miles (360,000 km²) of the
+drier portion of the Great Plains to native prairie (Grassland
+Ecosystem) and then reintroduce the American bison, also known as
+Buffalo, that once grazed the short grass prairie. Their proposal was
+termed the Buffalo Commons (Barbato 2021).</p>
+<p>The main reason for their proposal was that, during that time, there
+was a steady decline in the rural population because of the introduction
+of mechanized agriculture. Hence, fewer people were needed to cultivate
+the larger parts of the land. The region’s rural economy suffered
+greatly due to periodic disasters such as the Dust Bowl, especially in
+the drier parts. Thus, Frank J. Popper and Deborah Popper argued that
+the area wasn’t sustainable for large-scale commercial farming
+(Wikipedia 2024).</p>
+<p>Thus, to shift a significant portion of the region away from
+intensive farming and ranching practices and to address environmental
+and economic challenges in the plains, where population declines and
+unsustainable land use have been observed, they proposed the Buffalo
+Commons. After its proposal, the Buffalo Commons did not receive as much
+attention as it should have, however, as the years went by, it has
+received the attention of policymakers, yet one problem remains. Finding
+the best location for the Buffalo Commons has been a challenge to
+policymakers, it is for this reason that this project is being
+conducted.</p>
+<p>The purpose of this project is to find the best location for the
+Buffalo Commons using five main variables which include, population
+density, population change, farmland value, percent federal lands, and
+counties adjacent to Indian reservations.</p>
+</div>
+<div id="methods" class="section level3">
+<h3>METHODS</h3>
+<p>As stated earlier, the five variables used in this project include
+Population density, population change, farmland value, percent federal
+lands, and counties adjacent to Indian reservations. Since the Buffalo
+Commons is a nature preserve, it is best situated in an environment that
+will have fewer human impacts, so assessing the population density of
+the area before selection is important. In this project, suitability
+ranks were assigned to population density. The ranks ranged from 1
+through to 5, with the highest ranks being more suitable for locating
+the Buffalo Commons. The highest ranks relate to counties with low
+population density and vice versa.</p>
+<p>In most cases, counties may have low population densities, however,
+they may have a good potential to increase in the future which makes it
+not suitable for locating buffalo commons. In this case, there is a need
+to assess the population change for the various counties. To do this,
+Suitability ranks were assigned to the population change attribute table
+to determine the best counties for locating the Buffalo Commons.
+Counties with a declining population are preferred to increasing
+populations. The suitability ranks ranged from 1 through to 5, with 5
+representing counties with the highest population decline.</p>
+<p>Land Value was the third variable used to determine suitability.
+Here, farmlands with low value or cost are preferred to high-value
+farmlands due to budget restrictions. For this reason, farmlands with
+the lowest value were assigned a high suitability rank of 5, while the
+high-value farmlands were given low suitability ranks. The suitability
+ranks range from 1 to 5.</p>
+<p>Federal lands are lands that are owned by the government; thus, it is
+easier to acquire those lands than those that are privately owned. For
+this reason, the counties with the highest federal lands are preferred
+and more suitable for the Buffalo Commons, and thus, they were assigned
+the highest suitability rank. The suitability ranks ranged from 1
+through to 5.</p>
+<p>Lastly, counties that are adjacent to Indian reservations are
+preferred to those that are not. The select by location tool was used to
+select counties that are within 5 US Survey miles of Indian
+reservations, and they were assigned a rank of 1 to indicate that they
+are adjacent to Indian reservations. All the rest were assigned a rank
+of 0 to indicate that they were not adjacent to Indian reservations.</p>
+</div>
+<div id="study-area" class="section level3">
+<h3>STUDY AREA</h3>
+<p>With much of it covered in steppe, prairie, and grassland, the Great
+Plains lies just to the east of the Rocky Mountains in the United States
+(Fenneman 1917; Robinson 2023). It is bordered by the Rio Grande in the
+south. It is a large expanse of flatland in North America (Robinson
+2023). The Great Plains consists of Ten (10) states, which include,
+Montana, North Dakota, South Dakota, Wyoming, Nebraska, Kansas,
+Colorado, Oklahoma, Texas, and New Mexico. In total, there are about 824
+counties in this region. Below is a map of the study area.</p>
+<div class="float">
+<img src="images/Study%20Area.jpg" width="685" alt="MAP1: STUDY AREA" />
+<div class="figcaption"><strong><em>MAP1: STUDY AREA</em></strong></div>
+</div>
+</div>
+<div id="population-density" class="section level3">
+<h3>POPULATION DENSITY</h3>
+<p>The number of people living in a particular area divided by the total
+size of the area is termed population density. High population density
+is an indication that there are more people concentrated in a particular
+area. The goal of this project is to identify areas that have low
+population density. Thus, a suitability rank was assigned to various
+counties in this region ranging from 1 to 5, with the highest
+suitability rank being 5. The highest rank of 5 was given to counties
+with low population density. A rank of 1 was given to cities with high
+population density, in this case, low suitability.</p>
+<p>The method of classification used for this variable was Quantile. A
+suitability rank of 5 was very highly suitable, 4 was highly suitable,
+and 3 was moderate. Ranks 2 and 1 were low suitability and very low
+suitability respectively.</p>
+<p>On the population density map, the yellow color represents counties
+with very low population density and thus was assigned a rank of 5. The
+counties with red color had high population density and were thus
+assigned a rank of 1. The color gradient ranges from yellow to red with
+colors closer to yellow having low density and high suitability. The
+colors close to red have high density and hence low suitability. The
+orange color represents moderate suitability with moderate population
+density.</p>
+<p>Below is a table showing the population density classification.</p>
+<table style="width:100%;">
+<caption><strong><em>Table 1: Population Density</em></strong></caption>
+<colgroup>
+<col width="24%" />
+<col width="24%" />
+<col width="26%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Class Range</th>
+<th>Suitability Rank</th>
+<th>Description of Population Density</th>
+<th>Description of Suitability Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.1 - 2.9</td>
+<td>5</td>
+<td>Very Low (5)</td>
+<td>Very High Suitability</td>
+</tr>
+<tr class="even">
+<td>3.0 - 6.6</td>
+<td>4</td>
+<td>Low (4)</td>
+<td>High Suitability</td>
+</tr>
+<tr class="odd">
+<td>6.7 - 15.4</td>
+<td>3</td>
+<td>Moderate (3)</td>
+<td>Moderate Suitability</td>
+</tr>
+<tr class="even">
+<td>15.5 - 42.0</td>
+<td>2</td>
+<td>High (2)</td>
+<td>Low Suitability</td>
+</tr>
+<tr class="odd">
+<td>421 - 3879.7</td>
+<td>1</td>
+<td>Very High (1)</td>
+<td>Very Low Suitability</td>
+</tr>
+</tbody>
+</table>
+<p>From the map, most of the counties in the northern part of the Great
+Plains have a higher suitability ranking than those in the southern
+part. Montana, Wyoming, North, and South Dakota, and most of the western
+part of Texas have low population density and high suitability rankings
+in general. Below is the population density map.</p>
+<div class="float">
+<img src="images/Pop%20Density%20Layout.jpg" width="540"
+alt="Map2: Population Density" />
+<div class="figcaption"><strong><em>Map2: Population
+Density</em></strong></div>
+</div>
+</div>
+<div id="population-change" class="section level3">
+<h3>POPULATION CHANGE</h3>
+<p>Population changes measure the extent to which the population of a
+country increases or decreases over a particular period. Nature reserves
+are thus best situated in areas with declining human populations than
+those with increasing populations. The population change variable in
+this project was used to identify the rate of increase or decrease in
+the populations of counties in the Great Plains. Counties with
+decreasing populations were assigned a high suitability ranking while
+those with increasing populations were assigned a lower suitability
+ranking. The suitability ranking ranged from 1 through to 5, with 5
+being the highest suitability rank.</p>
+<p>The Population change variable was classified using the manual
+interval method with five classes. A suitability rank of 5 was very
+highly suitable, 4 was highly suitable, and 3 was moderate. Ranks 2 and
+1 were low suitability and very low suitability respectively.</p>
+<p>On the population change map, the yellow color represents counties
+with high decreasing populations and thus was assigned a rank of 5. The
+counties with red color had a high increasing population and were thus
+assigned a rank of 1. The color gradient ranges from yellow to red with
+colors closer to yellow having low population change and high
+suitability. The colors close to red have high population change and
+hence low suitability. The orange color represents moderate suitability
+with stable population change. Below is a table showing the
+classification of population change and the population change map.</p>
+<table style="width:100%;">
+<caption><strong><em>Table 2: Population Change
+Classification</em></strong></caption>
+<colgroup>
+<col width="24%" />
+<col width="24%" />
+<col width="26%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Class Range</th>
+<th>Suitability Rank</th>
+<th>Description of Population Change</th>
+<th>Description of Suitability Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt;= -10</td>
+<td>5</td>
+<td>Large Decline</td>
+<td>Very High Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= -2</td>
+<td>4</td>
+<td>Decline</td>
+<td>High Suitability</td>
+</tr>
+<tr class="odd">
+<td>&lt;= 2</td>
+<td>3</td>
+<td>Stable</td>
+<td>Moderate Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= 10</td>
+<td>2</td>
+<td>Growth</td>
+<td>Low Suitability</td>
+</tr>
+<tr class="odd">
+<td>&gt;10</td>
+<td>1</td>
+<td>Large Growth</td>
+<td>Very Low Suitability</td>
+</tr>
+</tbody>
+</table>
+<p>From the map, most of the counties in the eastern part of the Great
+Plains have yellow symbology, indicating higher population decline than
+those in the western parts of the plains.</p>
+<div class="float">
+<img src="images/Population%20Change%20Layout.jpg" width="540"
+alt="Map 3: Population Change" />
+<div class="figcaption"><strong><em>Map 3: Population
+Change</em></strong></div>
+</div>
+</div>
+<div id="farmland-value" class="section level3">
+<h3>FARMLAND VALUE</h3>
+<p>One of the most important aspects of this project is to purchase the
+farmlands from the farm owners for the Buffalo Commons. With a limited
+budget of 20 billion USD, coupled with the need to get the maximum
+number of farmlands possible to establish the Buffalo Commons, there is
+a need to select the farmlands that have the lowest value or cost. It
+should be noted that the farmers need to be paid twice the price of the
+farmland as a form of incentive. For this reason, we must look out for
+farmlands whose value is equal to or a little bit less than 10 billion
+USD. Counties with low farmland values and cost were assigned a high
+suitability rank of 5, with those of high values and cost having a
+suitability rank of 1. The suitability ranking ranged from 1 through to
+5.</p>
+<p>The method of classification used for this variable was the Quantile
+classification method. Land values less than or equal to 236 were the
+least with the highest suitability rankings. The highest value was
+greater than 716 and it had the lowest suitability ranking of 1. High
+suitability rankings are represented by the yellow color and the least
+suitability ranking is shown with red. The color gradient ranges from
+yellow through to red.</p>
+<table>
+<caption><strong><em>Table 3: Land Value
+Classification</em></strong></caption>
+<colgroup>
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Class Range</th>
+<th>Suitability Rank</th>
+<th>Description of Farmland Value</th>
+<th>Description of Suitability Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt;= $236</td>
+<td>5</td>
+<td>Very Low</td>
+<td>Very High Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= $335</td>
+<td>4</td>
+<td>Low</td>
+<td>High Suitability</td>
+</tr>
+<tr class="odd">
+<td>&lt;= $459</td>
+<td>3</td>
+<td>Moderate</td>
+<td>Moderate Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= $718</td>
+<td>2</td>
+<td>High</td>
+<td>Low Suitability</td>
+</tr>
+<tr class="odd">
+<td>&gt; $718</td>
+<td>1</td>
+<td>Very High</td>
+<td>Very Low Suitability</td>
+</tr>
+</tbody>
+</table>
+<p>From the map, most of the counties in the western parts of the Great
+Plain have low farmland values, this is represented by the yellow color.
+Montana, Wyoming, and New Mexico are the states with the lowest land
+values. Counties in eastern Texas have most of the counties with the
+highest land values, which are represented in red color. Below is a map
+of Farmland Value.</p>
+<div class="float">
+<img src="images/Farmland%20Value%20Layout.jpg" width="540"
+alt="Map 4: Farmland Value" />
+<div class="figcaption"><strong><em>Map 4: Farmland
+Value</em></strong></div>
+</div>
+</div>
+<div id="percent-federal-lands" class="section level3">
+<h3>PERCENT FEDERAL LANDS</h3>
+<p>Farmlands that are owned by the government are known as federal
+lands. These federal lands are much easier to purchase than those that
+are privately owned. The goal of this project is to get as many
+farmlands as possible for the establishment of the Buffalo Commons, as
+such, federal lands provide a higher potential for land acquisition than
+private farmlands. The percent federal land variable was used to
+determine the counties with the highest percent federal lands and those
+with the lowest. Counties with the highest percent federal lands were
+preferred to those with low percent federal lands and thus were assigned
+a suitability rank of 5. Those with the lowest percentage of federal
+lands were assigned a suitability rank of 1. The suitability rank ranged
+from 1 through to 5, with 5 being the highest suitability rank.</p>
+<p>The Natural Breaks classification method was used for this variable.
+The lowest classification value was less than 4.8 percent and the
+highest was greater than 60.1 percent. The most suitable areas were
+represented with the yellow color and the least suitable places were
+represented with the red color. Below is the classification table for
+the percent federal land variable.</p>
+<table>
+<caption><strong><em>Table 4: Percent Federal Lands
+Classification</em></strong></caption>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Class Range</th>
+<th>Suitability Rank</th>
+<th>Description of Percentage</th>
+<th>Description of Suitability Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&gt; 60.1%</td>
+<td>5</td>
+<td>Very High</td>
+<td>Very High Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= 60.1%</td>
+<td>4</td>
+<td>High</td>
+<td>High Suitability</td>
+</tr>
+<tr class="odd">
+<td>&lt;= 31.7%</td>
+<td>3</td>
+<td>Moderate</td>
+<td>Moderate Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= 15.4%</td>
+<td>2</td>
+<td>Low</td>
+<td>Low Suitability</td>
+</tr>
+<tr class="odd">
+<td>&lt;= 4.8%</td>
+<td>1</td>
+<td>Very Low</td>
+<td>Very Low Suitability</td>
+</tr>
+</tbody>
+</table>
+<p>From the map, almost the entire eastern part of the plains has low
+percentages of federal land, this is evident with the red color shown on
+the map. The few counties with the highest percentage of federal lands
+can be found in the states of New Mexico, Colorado, Wyoming, and
+Montana. The Percent Federal Lands map is shown below.</p>
+<div class="float">
+<img src="images/Percent%20Fed%20Lands%20Layout.jpg" width="540"
+alt="Map 5: Percent Federal Lands" />
+<div class="figcaption"><strong><em>Map 5: Percent Federal
+Lands</em></strong></div>
+</div>
+</div>
+<div id="counties-adjacent-to-indian-reservations"
+class="section level3">
+<h3>COUNTIES ADJACENT TO INDIAN RESERVATIONS</h3>
+<p>Counties adjacent to Indian reservations are better for the situation
+of Buffalo Commons. In this project, a special query was conducted using
+the select by location tool to select counties that are 5 US Survey
+Miles from Indian reservations. Here, counties that are adjacent to
+Indian reservations were assigned a suitability rank of 1, and those
+that are not adjacent to the reservations were assigned a suitability
+rank of 0.</p>
+<p>The counties that were adjacent to the Indian reservations were
+symbolized with a yellow color and those that are not adjacent are in
+white. The Indian reservations are symbolized with the pink color. The
+method of classification used was the natural breaks. The classification
+ranged from 0 to 1, with 1 being counties adjacent to Indian
+reservations.</p>
+<table>
+<caption><strong><em>Table 5: Counties Adjacent to Indian Reservations
+Classification</em></strong></caption>
+<colgroup>
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Class Range</th>
+<th>Suitability Rank</th>
+<th>Description of Class</th>
+<th>Description of Suitability Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>Adjacent</td>
+<td>Suitable</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>0</td>
+<td>Not Adjacent</td>
+<td>Not Suitable</td>
+</tr>
+</tbody>
+</table>
+<p>From the map, Montana, Wyoming, New Mexico, North, and South Dakota
+are the states that have the highest number of counties that are
+adjacent to Indian reservations. None of the counties in Texas are
+adjacent to Indian reservations.</p>
+<p>On the map, Indian reservations are represented in the pink color,
+and the counties that are adjacent to them are represented in the yellow
+color. The white spaces represent counties that are not adjacent to
+Indian reservations. Below is the map of the counties that are adjacent
+to Indian reservations.</p>
+<div class="float">
+<img src="images/Adjacent%20Counties%20Layout.jpg" width="540"
+alt="Map 6: Counties Adjacent to Indian Lands" />
+<div class="figcaption"><strong><em>Map 6: Counties Adjacent to Indian
+Lands</em></strong></div>
+</div>
+</div>
+<div id="final-suitability-results" class="section level3">
+<h3>FINAL SUITABILITY RESULTS</h3>
+<p>After all the maps were created with ranks assigned to each variable,
+the next step was to create a final suitability layer to determine the
+best place to establish the Buffalo Commons. To do this, the attribute
+tables for the variables were joined into one table using the FIPS Code
+value for each county. After joining all the tables, a final suitability
+feature layer was created with two additional fields. The fields were
+the final suitability rank field and the total cost of farmland. To
+create the final suitability rank field was created by adding the
+suitability rank for each variable and then dividing it by 4.2. The
+number 4.2 was derived by adding the maximum number of suitability ranks
+possible by the number of variables. In this case, the highest possible
+suitability number was 21 divided by the number of variables which is
+5.</p>
+<p>The final suitability rank ranged from 1 through to 5 with 5 being
+the highest suitability rank and the lowest suitability rank being 1.
+The final suitability layer was classified using the Quantile method
+with 5 classes. The highest class was 4.5 representing high suitability
+with the lowest being 1.7 indicating low suitability. The most suitable
+counties are symbolized with yellow, and the least suitable counties are
+symbolized with red. The color symbology ranges from yellow through to
+red.</p>
+<table>
+<caption><strong><em>Table 6: Final Suitability
+Classification</em></strong></caption>
+<colgroup>
+<col width="24%" />
+<col width="24%" />
+<col width="24%" />
+<col width="26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Class Range</th>
+<th>Suitability Rank</th>
+<th>Description of Class</th>
+<th>Description of Suitability Rank</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&gt; 4.5</td>
+<td>5</td>
+<td>Very High</td>
+<td>Very High Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= 3.6</td>
+<td>4</td>
+<td>High</td>
+<td>High Suitability</td>
+</tr>
+<tr class="odd">
+<td>&lt;= 3.1</td>
+<td>3</td>
+<td>Moderate</td>
+<td>Moderate Suitability</td>
+</tr>
+<tr class="even">
+<td>&lt;= 2.4</td>
+<td>2</td>
+<td>Low</td>
+<td>Low Suitability</td>
+</tr>
+<tr class="odd">
+<td>&lt;= 1.7</td>
+<td>1</td>
+<td>Very Low</td>
+<td>Very Low Suitability</td>
+</tr>
+</tbody>
+</table>
+<p>From the map, Montana, Wyoming, and New Mexico have the most counties
+with high suitability. North and South Colorado has a few counties with
+high suitability as well as Colorado. Texas, Oklahoma, and Kansas have
+the least suitable counties. The Final Suitability map is shown
+below.</p>
+<div class="float">
+<img src="images/Suitability%20Layout.jpg" width="540"
+alt="Map 7: Final Suitability Map" />
+<div class="figcaption"><strong><em>Map 7: Final Suitability
+Map</em></strong></div>
+</div>
+</div>
+<div id="proposed-buffalo-commons" class="section level3">
+<h3>PROPOSED BUFFALO COMMONS</h3>
+<p>Finally, I selected the counties that have high suitability ranking
+and farmlands that cost a little bit less than 10 billion USD. My
+proposed areas for the Buffalo Commons were in the states of Montana,
+New Mexico, Nebraska, and North and South Dakota. The total cost of
+farmlands for my proposed locations was $9,928,664,218. A total of 44
+counties were selected.</p>
+<p>The selection of the counties for the Buffalo Commons was influenced
+by several factors such as the presence of interstate highways and
+proximity to big cities. Since the Buffalo Commons is a nature
+preservation site, it is better to be far from large cities as well as
+highways. For this reason, I chose locations that are not too close to
+large cities with too many populations. Also, I tried to minimize the
+proximity to highways as much possible as it can be. From the map, even
+though some highways pass through the Buffalo Commons in the northern
+and southern parts, it is the best location possible considering all
+available restrictions.</p>
+<p>The selected location for the Buffalo Commons is symbolized by the
+green color. The highways are shown with brown lines and the big cities
+are represented as points with their names marked beside them. The map
+of the Proposed Buffalo Commons is shown below.</p>
+<div class="float">
+<img src="images/Buffalo%20Commons%20Layout.jpg" width="540"
+alt="Map 8: Proposed Buffalo Commons" />
+<div class="figcaption"><strong><em>Map 8: Proposed Buffalo
+Commons</em></strong></div>
+</div>
+</div>
+<div id="conclusion" class="section level3">
+<h3>CONCLUSION</h3>
+<p>The need to create nature reserves to protect biodiversity from human
+impacts comes with the need to find the best locations to place these
+reserves. After the lands in the Great Plains became unsustainable for
+commercial farming, due to the various disasters and declining
+population, there became a need to use the plains as a nature reserve
+for American Bisons. Even though this idea, after it was introduced, did
+not receive much attention has now become relevant to policymakers and
+thus, there has been a need to find the best location to situate this
+Buffalo Commons. This project aims to find the best places within the
+Great Plains to locate these buffalo commons.</p>
+<p>This project used five variables to determine the best location for
+the Buffalo Commons. These variables included Population Density,
+Population Change, Farmland Value, Counties Adjacent to Indian Lands,
+and Percent Federal Lands. These variables were assigned suitability
+ranks, and then analyses were made using ArcGIS Pro.</p>
+<p>Based on the above-mentioned variables, a final suitability rank was
+developed to determine the best locations for the Buffalo Commons. After
+reviewing various conditions that may affect the Buffalo Commons, such
+as proximity to large cities and the presence of highways, I selected
+counties in four States, which include Montana, North and South Dakota,
+and New Mexico.</p>
+<p>The Construction of the Buffalo Commons comes at a cost. Considering
+the 20 billion USD budget constraints and a need to compensate
+landowners by paying them twice the amount of the land, I made sure that
+the total cost of the farmlands to be purchased was less than 10 billion
+USD. To be precise, the total projected cost of land purchase was
+$9,928,664,218. Approximately, 228,519 people would be affected by the
+construction of Buffalo Commons.</p>
+<p>In Conclusion, this paper has been able to identify the best places
+within the Great Plains for the establishment of the Buffalo Commons.
+Thus, to look out for a detailed explanation of the best location to
+establish the Buffalo Commons and how to identify the best places for
+the Commons, the above explains all.</p>
+</div>
+<div id="references" class="section level3">
+<h3>REFERENCES</h3>
+<p>Barbato, L.S. 2021. Geographic Information System Lab Manual. 7th
+ed. Texas Tech University.</p>
+<p>Fenneman, N. M. 1917. “Physiographic Subdivision of the United
+States.” Proc Natl Acad Sci U S A 3 (1):17-22. doi:
+10.1073/pnas.3.1.17.</p>
+<p>NationalGeographic. 2019. “Protected Areas Have a Lot of Benefits.
+Here’s How to Maximize Them.”. NationalGeographic, accessed April 22. <a
+href="https://news.nationalgeographic.org/protected-areas-have-a-lot-of-benefits-heres-how-to-maximize-them/"
+class="uri">https://news.nationalgeographic.org/protected-areas-have-a-lot-of-benefits-heres-how-to-maximize-them/</a>.</p>
+<p>Robinson, E. B. and Dietz, John L. 2023. “Great Plains. Encyclopedia
+Britannica.” Last Modified October 17, accessed April 22. <a
+href="https://www.britannica.com/place/Great-Plains"
+class="uri">https://www.britannica.com/place/Great-Plains</a>.</p>
+<p>Wikipedia. 2024. “Buffalo Commons. (2024, April 12). In Wikipedia. <a
+href="https://en.wikipedia.org/wiki/Buffalo_Commons"
+class="uri">https://en.wikipedia.org/wiki/Buffalo_Commons</a>.” Last
+Modified April 12, accessed April 22. <a
+href="https://en.wikipedia.org/wiki/Buffalo_Commons"
+class="uri">https://en.wikipedia.org/wiki/Buffalo_Commons</a>.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

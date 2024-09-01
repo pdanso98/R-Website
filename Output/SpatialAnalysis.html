@@ -342,6 +342,18 @@ div.tocify {
     </li>
   </ul>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    ArcGIS Projects
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="The-Buffalo-Commons.html">Buffalo Commons Project</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -432,7 +444,7 @@ library(sf)
 
 #Import the data and store it under a new name
 
-Data1990&lt;-read.csv(&quot;INSERT YOUR FILE PATH HERE&quot;)
+Data1990&lt;-read.csv(&quot;C:\\Users\\Patrick\\Downloads\\Housing Data\\nhgis0045_ds120_1990_blck_grp.csv&quot;)
 
 #Have a glance at the data
 
@@ -488,7 +500,7 @@ Data1990&lt;-Data1990|&gt;filter(COUNTY==&quot;Travis&quot;)|&gt;
 
 #Now import the shapefile
 
-Shape1990&lt;-read_sf(&quot;INSERT YOUR FILE PATH HERE&quot;)
+Shape1990&lt;-read_sf(&quot;C:\\Users\\Patrick\\Downloads\\Shapefiles\\US_blck_grp_1990.shp&quot;)
 
 #Take a look at the shapefile
 
@@ -760,7 +772,7 @@ Variables&lt;-load_variables(year = 2000, &quot;sf1&quot;)
 #From the table we can see that the total housing unit variable is named &#39;H001001&#39;. We will be using this to download our data. 
 
 Data2000&lt;-get_decennial(geography = &quot;block group&quot;, variables = c(HousingUnits=&quot;H001001&quot;), year=2000, state = &quot;TX&quot;,
-                        county = &quot;Travis&quot;, key = &quot;INSERT YOUR CENSUS API KEY HERE&quot;, 
+                        county = &quot;Travis&quot;, key = &quot;73a534be4b8cd8aa9d67ff375d2a0a9546efdb26&quot;, 
                         sumfile = &quot;sf1&quot;, geometry = TRUE)
 
 #Now let&#39;s structure our data in a nice way.

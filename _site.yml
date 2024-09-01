@@ -11,6 +11,10 @@ navbar:
       menu: 
        - text: "Mapping With R"
          href: SpatialAnalysis.html
+    - text: "ArcGIS Projects"
+      menu: 
+        - text: "Buffalo Commons Project"
+          href: The-Buffalo-Commons.html
   right:
     - text: "Email"
       href: 'mailto:dansopatrick98@outlook.com'
