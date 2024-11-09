@@ -15,6 +15,10 @@ navbar:
       menu: 
         - text: "Buffalo Commons Project"
           href: The-Buffalo-Commons.html
+    - text: "Reviews"
+      menu: 
+        - text: "Water Conservation Techniques"
+          href: Arid-Lands-Project.html
   right:
     - text: "Email"
       href: 'mailto:dansopatrick98@outlook.com'
